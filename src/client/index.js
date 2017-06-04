@@ -1,12 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import {Provider} from 'react-redux';
+import Application from './js/Application';
+import store from './js/store';
 
-class Application extends React.Component {
-    render() {
-        return <div>
-            <h1>Node.js чат</h1>
-        </div>;
-    }
-}
-
-ReactDOM.render(<Application />, document.getElementById('app'));
+ReactDOM.render(
+    <Provider store={store}>
+        <Application />
+    </Provider>
+, document.getElementById('app'));
