@@ -22,16 +22,17 @@
     "babel-preset-react": "^6.3.13",
     "babel-preset-stage-0": "^6.3.13",
     "express": "^4.15.3",
+    "prop-types": "^15.5.10",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",
     "react-redux": "^4.4.6",
     "react-router": "^3.0.2",
     "react-router-redux": "^4.0.8",
+    "react-tabs": "^1.0.0",
     "redux": "^3.6.0",
     "redux-logger": "^2.10.2",
     "redux-thunk": "^2.2.0",
     "webpack": "^1.12.9"
   },
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }

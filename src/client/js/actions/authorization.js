@@ -9,6 +9,6 @@ export const checkIfUserAuthorized = () => {
         dispatch({type: CHECK_IF_AUTHORIZED_START});
         setTimeout(() => {
             dispatch({type: CHECK_IF_AUTHORIZED_RESULT_FALSE});
-        }, 1000);
+        }, 2500);
     };
 };

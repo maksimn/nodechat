@@ -1,33 +1,25 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
+
+import Page from './components/Page';
 import {checkIfUserAuthorized} from './actions/authorization';
 
 class Application extends React.Component {
-    componentWillMount() {
-        this.props.dispatch(checkIfUserAuthorized());
+    constructor(props) {
+        super(props);
+
+        props.dispatch(checkIfUserAuthorized());
     }
 
     render() {
-        const {isAuthorized} = this.props; // Авторизован ли пользователь
-
-        if (isAuthorized) {
-            return <div>
-                <h1>Node.js чат</h1>
-                <div>Пользователь авторизован</div>
-            </div>;
-        } else if (isAuthorized === null) {
-            return <div>
-                <h1>Node.js чат</h1>
-                <div>Выполняется запрос...</div>
-            </div>;
-        }
-
-        return <div>
-            <h1>Node.js чат</h1>
-            <div>Пользователь не авторизован</div>
-        </div>;
+        return <Page isAuthorized={this.props.isAuthorized} />;
     }
 }
+
+Application.propTypes = {
+    isAuthorized: PropTypes.bool
+};
 
 export default connect(store => {
     return {
