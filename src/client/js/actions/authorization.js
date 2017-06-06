@@ -12,3 +12,13 @@ export const checkIfUserAuthorized = () => {
         }, 2500);
     };
 };
+
+export const submitRegistrationData = (name, password, confirmPassword) => {
+    return dispatch => {
+        console.log('Sending reg data: ', {
+            name,
+            password,
+            confirmPassword
+        });
+    };
+};
