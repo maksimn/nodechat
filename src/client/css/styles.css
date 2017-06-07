@@ -49,6 +49,7 @@ table {
 
 /* Конец мейеровского reset.css */
 
+/* НАЧАЛО дефолтных стилей react-tabs */
 .react-tabs__tab-list {
   border-bottom: 1px solid #aaa;
   margin: 0 0 10px;
@@ -100,4 +101,29 @@ table {
   right: -4px;
   bottom: -5px;
   background: #fff;
+}
+/* КОНЕЦ дефолтных стилей react-tabs */
+
+body {
+    font-family: "Arial Black", Gadget, sans-serif;
+}
+
+.header {
+    background-color: #093;
+}
+
+.header__title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
+    padding: 10px;
+}
+
+.auth-content {
+    width: 300px;
+    margin: 12px auto 0 auto;
+}
+
+.auth-form__field {
+    margin: 16px 0;
 }

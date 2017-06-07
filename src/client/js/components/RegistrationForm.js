@@ -54,25 +54,25 @@ class RegistrationForm extends React.Component {
     render() {
         return <form onSubmit={this.onRegistrationDataSubmit}>
 
-            <div>
+            <div className="auth-form__field">
                 <div>Имя: </div>
                 <div>
                     <input type="text" onChange={this.onNameChange} />
                 </div>
             </div>
-            <div>
+            <div className="auth-form__field">
                 <div>Пароль: </div>
                 <div>
                     <input type="password" onChange={this.onPasswordChange} />
                 </div>
             </div>
-            <div>
+            <div className="auth-form__field">
                 <div>Повтор пароля: </div>
                 <div>
                     <input type="password" onChange={this.onConfirmPasswordChange} />
                 </div>
             </div>
-            <div>
+            <div className="auth-form__field">
                 <input type="submit" value="Зарегистрироваться" />
             </div>
 

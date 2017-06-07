@@ -6,22 +6,24 @@ import RegistrationForm from './RegistrationForm';
 
 export default class AuthContent extends React.Component {
     render() {
-        return <Tabs>
-            <TabList>
-                <Tab>Вход</Tab>
-                <Tab>Регистрация</Tab>
-            </TabList>
+        return <div className="auth-content">
+            <Tabs>
+                <TabList>
+                    <Tab>Вход</Tab>
+                    <Tab>Регистрация</Tab>
+                </TabList>
 
-            <TabPanel>
+                <TabPanel>
 
-                <LoginForm />
+                    <LoginForm />
 
-            </TabPanel>
-            <TabPanel>
+                </TabPanel>
+                <TabPanel>
 
-                <RegistrationForm />
+                    <RegistrationForm />
 
-            </TabPanel>
-        </Tabs>;
+                </TabPanel>
+            </Tabs>
+        </div>;
     }
 }

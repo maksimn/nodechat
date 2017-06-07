@@ -8,8 +8,8 @@ class Page extends React.Component {
         const {isAuthorized} = this.props; // Авторизован ли пользователь
 
         return <div>
-            <div>
-                <h1>Node.js чат</h1>
+            <div className="header">
+                <h1 className="header__title">Node.js чат</h1>
             </div>
 
             <Content isAuthorized={isAuthorized} />
