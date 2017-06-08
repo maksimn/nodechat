@@ -1,8 +1,14 @@
+import axios from 'axios';
+
 import {
     CHECK_IF_AUTHORIZED_START,
     CHECK_IF_AUTHORIZED_RESULT_FALSE,
     CHECK_IF_AUTHORIZED_RESULT_TRUE,
-    FORM_VALIDATION_ERROR
+    FORM_VALIDATION_ERROR,
+    FORM_VALIDATION_ERROR_RESET,
+    REGISTRATION_START,
+    REGISTRATION_SUCCESS,
+    REGISTRATION_ERROR
 } from './constants';
 import {validateRegistrationData} from '../validation';
 
@@ -23,10 +29,15 @@ export const submitRegistrationData = (name, password, confirmPassword) => {
     }
 
     return dispatch => {
-        console.log('Sending reg data: ', {
-            name,
-            password,
-            confirmPassword
+        const postData = { name, password };
+
+        dispatch({type: FORM_VALIDATION_ERROR_RESET});
+        dispatch({type: REGISTRATION_START, postData});
+        axios.post('/users', postData).then(function (response) {
+            dispatch({type: REGISTRATION_SUCCESS});
+            console.log(response);
+        }).catch(function (error) {
+            dispatch({type: REGISTRATION_ERROR, error});
         });
     };
 };
