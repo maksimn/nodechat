@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 
+import ValidationErrors from './ValidationErrors';
 import {submitRegistrationData} from '../actions/authorization';
 
 class RegistrationForm extends React.Component {
@@ -72,9 +73,12 @@ class RegistrationForm extends React.Component {
                     <input type="password" onChange={this.onConfirmPasswordChange} />
                 </div>
             </div>
+
+            <ValidationErrors source="registration" />
+            
             <div className="auth-form__field">
                 <input type="submit" value="Зарегистрироваться" />
-            </div>
+            </div>            
 
         </form>;
     }

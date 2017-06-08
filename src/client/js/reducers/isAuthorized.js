@@ -21,6 +21,6 @@ const isAuthorized = (state = initState, action) => {
         default:
             return state;
     }
-}
+};
 
 export default isAuthorized;
