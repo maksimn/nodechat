@@ -34,10 +34,25 @@ export const submitRegistrationData = (name, password, confirmPassword) => {
         dispatch({type: FORM_VALIDATION_ERROR_RESET});
         dispatch({type: REGISTRATION_START, postData});
         axios.post('/users', postData).then(function (response) {
-            dispatch({type: REGISTRATION_SUCCESS});
-            console.log(response);
+            dispatch({type: REGISTRATION_SUCCESS, response});
+            
+            const userName = response.data.name;
+            alert(`Пользователь ${userName} успешно зарегистрирован.`);
         }).catch(function (error) {
             dispatch({type: REGISTRATION_ERROR, error});
+
+            const validationErrorData = {
+                source: 'registration',
+                errors: ['Не удалось зарегистрировать нового пользователя']
+            };
+
+            if (error.response.status === 409) {
+                const userName = error.response.data.name;
+
+                validationErrorData.errors.push(`Пользователь '${userName}' уже существует.`);
+            }
+
+            dispatch({type: FORM_VALIDATION_ERROR, validationErrorData});
         });
     };
 };
