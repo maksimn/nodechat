@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const MockRepository = require('./MockRepository');
+const mockRepository = require('./mockRepository');
 
 const app = express();
 const port = process.env.PORT;
@@ -13,21 +13,21 @@ app.use(express.static(publicPath));
 app.use(bodyParser.json());
 
 app.post('/users', (req, res) => {
-    const userData = req.body;
+    const {name, password} = req.body;
 
-    try {
-        MockRepository.addUser(userData.name, userData.password);
-        res.status(201).send({ name: userData.name });
-    } catch (err) {
-        const conflict = 409, 
-              serverError = 500;
+    mockRepository.addUser(name, password).then(() => {
+        const created = 201;
+        
+        res.status(created).send({name});
+    }).catch(e => {
+        const conflict = 409, serverError = 500;
 
-        if (err.code === conflict) {
-            return res.status(conflict).send({ name: userData.name });
+        if (e.code === conflict) {
+            return res.status(conflict).send({ name });
         }
 
-        res.status(serverError).send({ name: userData.name });
-    }
+        res.status(serverError).send({ name });
+    });
 });
 
 app.listen(port, () => {
