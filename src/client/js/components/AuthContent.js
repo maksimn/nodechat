@@ -1,16 +1,31 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 
 import LoginForm from './LoginForm';
 import RegistrationForm from './RegistrationForm';
+import {setAuthPageActiveTab} from '../actions/authorization';
 
-export default class AuthContent extends React.Component {
+class AuthContent extends React.Component {
+    onTabSelected(index, lastIndex, event) {
+        this.props.dispatch(setAuthPageActiveTab(index));
+    }
+
     render() {
+        const {selectedTabIndex} = this.props;
+
         return <div className="auth-content">
-            <Tabs>
+            <Tabs 
+                  onSelect={this.onTabSelected.bind(this)} 
+                  selectedIndex={selectedTabIndex}>
+
                 <TabList>
-                    <Tab>Вход</Tab>
-                    <Tab>Регистрация</Tab>
+                    <Tab>
+                        Вход
+                    </Tab>
+                    <Tab>
+                        Регистрация
+                    </Tab>
                 </TabList>
 
                 <TabPanel>
@@ -27,3 +42,9 @@ export default class AuthContent extends React.Component {
         </div>;
     }
 }
+
+export default connect(state => {
+    return {
+        selectedTabIndex: state.authPageActiveTabIndex
+    };
+})(AuthContent);
