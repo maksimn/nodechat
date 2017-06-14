@@ -74,7 +74,7 @@ class RegistrationForm extends React.Component {
                 </div>
             </div>
 
-            <ValidationErrors source="registration" />
+            <ValidationErrors />
             
             <div className="auth-form__field">
                 <input type="submit" value="Зарегистрироваться" />

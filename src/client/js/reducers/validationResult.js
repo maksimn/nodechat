@@ -1,14 +1,11 @@
 import {FORM_VALIDATION_ERROR, FORM_VALIDATION_ERROR_RESET} from '../actions/constants';
 
-const initState = {
-    source: '',
-    errors: []   
-}; 
+const initState = [];
 
-const validationErrorData = (state = initState, action) => {
+const validationResult = (state = initState, action) => {
     switch (action.type) {
         case FORM_VALIDATION_ERROR:
-            return action.validationErrorData;
+            return action.validationResult;
         case FORM_VALIDATION_ERROR_RESET: 
             return initState;
         default:
@@ -16,4 +13,4 @@ const validationErrorData = (state = initState, action) => {
     }
 };
 
-export default validationErrorData;
+export default validationResult;

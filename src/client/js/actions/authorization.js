@@ -32,10 +32,10 @@ export const checkIfUserAuthorized = () => {
 };
 
 export const submitRegistrationData = (name, password, confirmPassword) => {
-    const validationErrorData = validateRegistrationData(name, password, confirmPassword);
+    const validationResult = validateRegistrationData(name, password, confirmPassword);
 
-    if (validationErrorData.errors.length > 0) {
-        return {type: FORM_VALIDATION_ERROR, validationErrorData};
+    if (validationResult.length > 0) {
+        return {type: FORM_VALIDATION_ERROR, validationResult};
     }
 
     return dispatch => {
@@ -52,18 +52,15 @@ export const submitRegistrationData = (name, password, confirmPassword) => {
         }).catch(function (error) {
             dispatch({type: REGISTRATION_ERROR, error});
 
-            const validationErrorData = {
-                source: 'registration',
-                errors: ['Не удалось зарегистрировать нового пользователя']
-            };
+            const validationResult = ['Не удалось зарегистрировать нового пользователя'];
 
             if (error.response.status === 409) {
                 const userName = error.response.data.name;
 
-                validationErrorData.errors.push(`Пользователь '${userName}' уже существует.`);
+                validationResult.push(`Пользователь '${userName}' уже существует.`);
             }
 
-            dispatch({type: FORM_VALIDATION_ERROR, validationErrorData});
+            dispatch({type: FORM_VALIDATION_ERROR, validationResult});
         });
     };
 };
