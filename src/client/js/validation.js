@@ -14,3 +14,14 @@ export const validateRegistrationData = (name, password, confirmPassword) => {
     return validationErrorData;
 };
 
+export const getUserRegistrationValidationErrors = err => {
+    const validationResult = ['Не удалось зарегистрировать нового пользователя'];
+
+    if (err.response.status === 409) {
+        const userName = error.response.data.name;
+
+        validationResult.push(`Пользователь '${userName}' уже существует.`);
+    }
+
+    return validationResult;
+};

@@ -9,10 +9,9 @@ import {
     REGISTRATION_START,
     REGISTRATION_SUCCESS,
     REGISTRATION_ERROR,
-    SET_LOGIN_TAB_ACTIVE,
-    SET_REGISTER_TAB_ACTIVE
+    SET_LOGIN_TAB_ACTIVE
 } from './constants';
-import {validateRegistrationData} from '../validation';
+import {validateRegistrationData, getUserRegistrationValidationErrors} from '../validation';
 
 export const setAuthPageActiveTab = index => {
     if (index === 0) {
@@ -44,22 +43,15 @@ export const submitRegistrationData = (name, password, confirmPassword) => {
         dispatch({type: FORM_VALIDATION_ERROR_RESET});
         dispatch({type: REGISTRATION_START, postData});
         axios.post('/users', postData).then(function (response) {
+            const {name} = response.data;
+
             dispatch({type: REGISTRATION_SUCCESS, response});
             dispatch({type: SET_LOGIN_TAB_ACTIVE});
-            
-            const {name} = response.data;
             alert(`Пользователь ${name} успешно зарегистрирован.`);
         }).catch(function (error) {
+            const validationResult = getUserRegistrationValidationErrors(error);
+
             dispatch({type: REGISTRATION_ERROR, error});
-
-            const validationResult = ['Не удалось зарегистрировать нового пользователя'];
-
-            if (error.response.status === 409) {
-                const userName = error.response.data.name;
-
-                validationResult.push(`Пользователь '${userName}' уже существует.`);
-            }
-
             dispatch({type: FORM_VALIDATION_ERROR, validationResult});
         });
     };
