@@ -9,7 +9,8 @@ import {
     REGISTRATION_START,
     REGISTRATION_SUCCESS,
     REGISTRATION_ERROR,
-    SET_LOGIN_TAB_ACTIVE
+    SET_LOGIN_TAB_ACTIVE,
+    SET_REGISTER_TAB_ACTIVE
 } from './constants';
 import {validateRegistrationData, getUserRegistrationValidationErrors} from '../validation';
 

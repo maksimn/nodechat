@@ -23,6 +23,6 @@ Application.propTypes = {
 
 export default connect(store => {
     return {
-        isAuthorized: store.isAuthorized
+        isAuthorized: store.auth.isAuthorized
     };
 })(Application);

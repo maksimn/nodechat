@@ -45,6 +45,6 @@ class AuthContent extends React.Component {
 
 export default connect(state => {
     return {
-        selectedTabIndex: state.authPageActiveTabIndex
+        selectedTabIndex: state.auth.authActiveTabIndex
     };
 })(AuthContent);
