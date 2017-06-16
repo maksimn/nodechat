@@ -15,10 +15,12 @@ app.use(bodyParser.json());
 app.post('/users', (req, res) => {
     const {name, password} = req.body;
 
-    mockRepository.addUser(name, password).then(() => {
+    mockRepository.addUser(name, password).then(result => {
         const created = 201;
         
-        res.status(created).send({name});
+        res.status(created)
+            .header('x-auth', result.token)
+            .send({name});
     }).catch(e => {
         const conflict = 409, serverError = 500;
 

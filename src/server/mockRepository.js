@@ -4,7 +4,7 @@ const users = [{
     id: 0,
     name: 'test',
     password: 'test',
-    token: '0'
+    token: []
 }];
 
 mockRepository.addUser = function(name, password) {
@@ -16,14 +16,19 @@ mockRepository.addUser = function(name, password) {
             reject(err);
         }
 
+        const prevLength = users.length;
+
         users.push({
-            id: users.length,
+            id: prevLength,
             name,
             password,
-            token: users.length.toString()
+            token: [prevLength.toString()]
         });
 
-        resolve({name});
+        resolve({
+            name, 
+            token: users[prevLength].token[0]
+        });
     });
 };
 

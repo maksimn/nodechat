@@ -10,7 +10,8 @@ import {
     REGISTRATION_SUCCESS,
     REGISTRATION_ERROR,
     SET_LOGIN_TAB_ACTIVE,
-    SET_REGISTER_TAB_ACTIVE
+    SET_REGISTER_TAB_ACTIVE,
+    SET_AUTH_TOKEN
 } from './constants';
 import {validateRegistrationData, getUserRegistrationValidationErrors} from '../validation';
 
@@ -20,6 +21,10 @@ export const setAuthPageActiveTab = index => {
     } else if (index === 1) {
         return { type: SET_REGISTER_TAB_ACTIVE };
     }
+};
+
+export const setAuthToken = token => {
+    return {type: SET_AUTH_TOKEN, token};
 };
 
 export const checkIfUserAuthorized = () => {
@@ -45,9 +50,11 @@ export const submitRegistrationData = (name, password, confirmPassword) => {
         dispatch({type: REGISTRATION_START, postData});
         axios.post('/users', postData).then(function (response) {
             const {name} = response.data;
+            const token = response.headers['x-auth'];
 
             dispatch({type: REGISTRATION_SUCCESS, response});
             dispatch({type: SET_LOGIN_TAB_ACTIVE});
+            dispatch(setAuthToken(token));
             alert(`Пользователь ${name} успешно зарегистрирован.`);
         }).catch(function (error) {
             const validationResult = getUserRegistrationValidationErrors(error);
