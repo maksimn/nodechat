@@ -1,5 +1,5 @@
 import axios from 'axios';
-
+import {createAction} from 'redux-actions';
 import {
     CHECK_IF_AUTHORIZED_START,
     CHECK_IF_AUTHORIZED_RESULT_FALSE,
@@ -13,6 +13,9 @@ import {
     SET_REGISTER_TAB_ACTIVE
 } from './constants';
 import {validateRegistrationData, getUserRegistrationValidationErrors} from '../validation';
+
+const formValidationError = createAction(FORM_VALIDATION_ERROR);
+const formValidationErrorReset = createAction(FORM_VALIDATION_ERROR_RESET);
 
 export const setAuthPageActiveTab = index => {
     if (index === 0) {
@@ -35,13 +38,13 @@ export const submitRegistrationData = (name, password, confirmPassword) => {
     const validationResult = validateRegistrationData(name, password, confirmPassword);
 
     if (validationResult.length > 0) {
-        return {type: FORM_VALIDATION_ERROR, validationResult};
+        return formValidationError(validationResult);
     }
 
     return dispatch => {
         const postData = { name, password };
 
-        dispatch({type: FORM_VALIDATION_ERROR_RESET});
+        dispatch(formValidationErrorReset());
         dispatch({type: REGISTRATION_START, postData});
         axios.post('/users', postData).then(function (response) {
             const {name} = response.data;
@@ -53,7 +56,7 @@ export const submitRegistrationData = (name, password, confirmPassword) => {
             const validationResult = getUserRegistrationValidationErrors(error);
 
             dispatch({type: REGISTRATION_ERROR, error});
-            dispatch({type: FORM_VALIDATION_ERROR, validationResult});
+            dispatch(formValidationError(validationResult));
         });
     };
 };
