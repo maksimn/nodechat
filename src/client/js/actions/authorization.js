@@ -10,8 +10,7 @@ import {
     REGISTRATION_SUCCESS,
     REGISTRATION_ERROR,
     SET_LOGIN_TAB_ACTIVE,
-    SET_REGISTER_TAB_ACTIVE,
-    SET_AUTH_TOKEN
+    SET_REGISTER_TAB_ACTIVE
 } from './constants';
 import {validateRegistrationData, getUserRegistrationValidationErrors} from '../validation';
 
@@ -21,10 +20,6 @@ export const setAuthPageActiveTab = index => {
     } else if (index === 1) {
         return { type: SET_REGISTER_TAB_ACTIVE };
     }
-};
-
-export const setAuthToken = token => {
-    return {type: SET_AUTH_TOKEN, token};
 };
 
 export const checkIfUserAuthorized = () => {
