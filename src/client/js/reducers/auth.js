@@ -3,8 +3,7 @@ import {
     CHECK_IF_AUTHORIZED_RESULT_FALSE,
     CHECK_IF_AUTHORIZED_RESULT_TRUE,
     SET_LOGIN_TAB_ACTIVE, 
-    SET_REGISTER_TAB_ACTIVE,
-    SET_AUTH_TOKEN
+    SET_REGISTER_TAB_ACTIVE
 } from '../actions/constants';
 
 // свойство isAuthorized в store может иметь значения
@@ -44,12 +43,7 @@ const auth = (state = initState, action) => {
             return  {
                 ...state,
                 authActiveTabIndex: 1
-            };
-        case SET_AUTH_TOKEN:
-            return  {
-                ...state,
-                token: action.token
-            };            
+            };          
         default:
             return state;
     }

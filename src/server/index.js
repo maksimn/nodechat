@@ -19,8 +19,7 @@ app.post('/users', (req, res) => {
         const created = 201;
         
         res.status(created)
-            .header('x-auth', result.token)
-            .send({name});
+           .send({name});
     }).catch(e => {
         const conflict = 409, serverError = 500;
 

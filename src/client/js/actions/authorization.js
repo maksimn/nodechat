@@ -50,11 +50,9 @@ export const submitRegistrationData = (name, password, confirmPassword) => {
         dispatch({type: REGISTRATION_START, postData});
         axios.post('/users', postData).then(function (response) {
             const {name} = response.data;
-            const token = response.headers['x-auth'];
 
             dispatch({type: REGISTRATION_SUCCESS, response});
             dispatch({type: SET_LOGIN_TAB_ACTIVE});
-            dispatch(setAuthToken(token));
             alert(`Пользователь ${name} успешно зарегистрирован.`);
         }).catch(function (error) {
             const validationResult = getUserRegistrationValidationErrors(error);

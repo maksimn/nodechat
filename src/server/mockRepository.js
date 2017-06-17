@@ -16,19 +16,16 @@ mockRepository.addUser = function(name, password) {
             reject(err);
         }
 
-        const prevLength = users.length;
+        const len = users.length;
 
         users.push({
-            id: prevLength,
+            id: len,
             name,
             password,
-            token: [prevLength.toString()]
+            token: []
         });
 
-        resolve({
-            name, 
-            token: users[prevLength].token[0]
-        });
+        resolve({name});
     });
 };
 
