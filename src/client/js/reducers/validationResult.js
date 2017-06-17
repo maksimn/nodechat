@@ -4,8 +4,8 @@ import {FORM_VALIDATION_ERROR, FORM_VALIDATION_ERROR_RESET} from '../actions/con
 const initState = [];
 
 const validationResult = handleActions({
-    FORM_VALIDATION_ERROR: (state, action) => (action.payload),
-    FORM_VALIDATION_ERROR_RESET: (state, action) => (initState)
+    [FORM_VALIDATION_ERROR]: (state, action) => (action.payload),
+    [FORM_VALIDATION_ERROR_RESET]: () => (initState)
 }, initState);
 
 export default validationResult;

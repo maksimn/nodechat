@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'react-props';
 import {connect} from 'react-redux';
 
 import ValidationErrors from './ValidationErrors';
@@ -83,5 +84,9 @@ class RegistrationForm extends React.Component {
         </form>;
     }
 }
+
+RegistrationForm.propTypes = {
+    dispatch: PropTypes.func
+};
 
 export default connect()(RegistrationForm);

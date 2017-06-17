@@ -18,6 +18,7 @@ class Application extends React.Component {
 }
 
 Application.propTypes = {
+    dispatch: PropTypes.func,
     isAuthorized: PropTypes.bool
 };
 

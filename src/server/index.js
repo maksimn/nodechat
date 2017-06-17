@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 app.post('/users', (req, res) => {
     const {name, password} = req.body;
 
-    mockRepository.addUser(name, password).then(result => {
+    mockRepository.addUser(name, password).then(() => {
         const created = 201;
         
         res.status(created)

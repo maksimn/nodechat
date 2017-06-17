@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 
@@ -7,7 +8,7 @@ import RegistrationForm from './RegistrationForm';
 import {setAuthPageActiveTab} from '../actions/authorization';
 
 class AuthContent extends React.Component {
-    onTabSelected(index, lastIndex, event) {
+    onTabSelected(index) {
         this.props.dispatch(setAuthPageActiveTab(index));
     }
 
@@ -42,6 +43,11 @@ class AuthContent extends React.Component {
         </div>;
     }
 }
+
+AuthContent.propTypes = {
+    dispatch: PropTypes.func,
+    selectedTabIndex: PropTypes.number
+};
 
 export default connect(state => {
     return {

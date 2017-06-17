@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 class ValidationErrors extends React.Component {
@@ -18,6 +19,10 @@ class ValidationErrors extends React.Component {
         return null;
     }
 }
+
+ValidationErrors.propTypes = {
+    validationResult: PropTypes.array
+};
 
 export default connect(state => {
     return {
