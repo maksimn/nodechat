@@ -1,3 +1,5 @@
+const Promise = require('promise-polyfill');
+
 const mockRepository = {};
 
 const users = [{
@@ -7,7 +9,7 @@ const users = [{
     token: []
 }];
 
-mockRepository.addUser = function(name, password) {
+mockRepository.addUser = (name, password) => {
     return new Promise((resolve, reject) => {
         if (users.find(u => u.name === name)) { 
             const err = new Error();
@@ -27,6 +29,19 @@ mockRepository.addUser = function(name, password) {
 
         resolve({name});
     });
+};
+
+mockRepository.loginUser = (name, password) => {
+    return new Promise((resolve, reject) => {
+        const user = users.find(u => u.name === name && u.password === password);
+
+        if (user) {
+            user.token = [user.id.toString()];
+            resolve({token: user.token[0]});
+        } else {
+            reject();
+        }
+    });    
 };
 
 module.exports = mockRepository;

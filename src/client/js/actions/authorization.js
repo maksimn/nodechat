@@ -9,9 +9,16 @@ import {
     REGISTRATION_SUCCESS,
     REGISTRATION_ERROR,
     SET_LOGIN_TAB_ACTIVE,
-    SET_REGISTER_TAB_ACTIVE
+    SET_REGISTER_TAB_ACTIVE,
+    LOGIN_START,
+    LOGIN_ERROR,
+    LOGIN_SUCCESS
 } from './constants';
-import {validateRegistrationData, getUserRegistrationValidationErrors} from '../validation';
+import {
+    validateLoginData,
+    validateRegistrationData, 
+    getUserRegistrationValidationErrors
+} from '../validation';
 
 const formValidationError = createAction(FORM_VALIDATION_ERROR);
 const formValidationErrorReset = createAction(FORM_VALIDATION_ERROR_RESET);
@@ -55,6 +62,29 @@ export const submitRegistrationData = (name, password, confirmPassword) => {
             const validationResult = getUserRegistrationValidationErrors(error);
 
             dispatch({type: REGISTRATION_ERROR, error});
+            dispatch(formValidationError(validationResult));
+        });
+    };
+};
+
+export const submitLoginData = (name, password) => {
+    const validationResult = validateLoginData(name, password);
+
+    if (validationResult.length > 0) {
+        return formValidationError(validationResult);
+    }
+
+    return dispatch => {
+        const postData = { name, password };
+
+        dispatch(formValidationErrorReset());
+        dispatch({type: LOGIN_START, postData});
+        axios.post('/users/login', postData).then(function (response) {
+            dispatch({type: LOGIN_SUCCESS, response});
+        }).catch(function (error) {
+            const validationResult = ['Не удалось войти в систему. Проверьте логин и пароль'];
+
+            dispatch({type: LOGIN_ERROR, error});
             dispatch(formValidationError(validationResult));
         });
     };

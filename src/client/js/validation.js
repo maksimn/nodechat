@@ -25,3 +25,16 @@ export const getUserRegistrationValidationErrors = err => {
 
     return validationResult;
 };
+
+export const validateLoginData = (name, password) => {
+    const validationResult = [];
+
+    if (name.length < 1) {
+        validationResult.push('Имя должно быть заполнено.');
+    }
+    if (password.length < 1) {
+        validationResult.push('Пароль должен быть указан.');
+    }
+
+    return validationResult;
+};

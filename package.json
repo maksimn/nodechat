@@ -24,6 +24,7 @@
     "babel-preset-stage-0": "^6.3.13",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
+    "promise-polyfill": "^6.0.2",
     "prop-types": "^15.5.10",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",

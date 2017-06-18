@@ -31,6 +31,18 @@ app.post('/users', (req, res) => {
     });
 });
 
+app.post('/users/login', (req, res) => {
+    const {name, password} = req.body;
+
+    mockRepository.loginUser(name, password).then(result => {
+        res.header('x-auth', result.token).send();
+    }).catch(() => {
+        const unauthorized = 409;
+
+        res.status(unauthorized).send({});
+    });
+});
+
 app.listen(port, () => {
     console.log(`Started up at port ${port}`);
 });

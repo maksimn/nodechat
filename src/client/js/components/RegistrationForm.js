@@ -1,5 +1,5 @@
 import React from 'react';
-import PropTypes from 'react-props';
+import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import ValidationErrors from './ValidationErrors';
