@@ -5,11 +5,14 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 
 import LoginForm from './LoginForm';
 import RegistrationForm from './RegistrationForm';
-import {setAuthPageActiveTab} from '../actions/authorization';
+import {setAuthPageActiveTab, formValidationErrorReset} from '../actions/authorization';
 
 class AuthContent extends React.Component {
     onTabSelected(index) {
-        this.props.dispatch(setAuthPageActiveTab(index));
+        const {dispatch} = this.props;
+
+        dispatch(formValidationErrorReset());
+        dispatch(setAuthPageActiveTab(index));
     }
 
     render() {

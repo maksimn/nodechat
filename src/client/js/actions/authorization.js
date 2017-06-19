@@ -1,7 +1,10 @@
 import axios from 'axios';
 import {createAction} from 'redux-actions';
+import Cookies from 'universal-cookie';
+
 import {
     CHECK_IF_AUTHORIZED_START,
+    CHECK_IF_AUTHORIZED_RESULT_TRUE,
     CHECK_IF_AUTHORIZED_RESULT_FALSE,
     FORM_VALIDATION_ERROR,
     FORM_VALIDATION_ERROR_RESET,
@@ -20,8 +23,10 @@ import {
     getUserRegistrationValidationErrors
 } from '../validation';
 
+const AUTH_TOKEN = 'AUTH_TOKEN';
+
 const formValidationError = createAction(FORM_VALIDATION_ERROR);
-const formValidationErrorReset = createAction(FORM_VALIDATION_ERROR_RESET);
+export const formValidationErrorReset = createAction(FORM_VALIDATION_ERROR_RESET);
 
 export const setAuthPageActiveTab = index => {
     if (index === 0) {
@@ -31,13 +36,29 @@ export const setAuthPageActiveTab = index => {
     }
 };
 
+// Действие вызывается при рефреше страницы приложения | первой загрузке.
+// Сначала проверяется, есть ли значение AUTH_TOKEN в куки
+// Если нет, то возвращается CHECK_IF_AUTHORIZED_RESULT_FALSE
+// Если есть, то оно отправляется на сервер
+// На сервере возвращаются данные пользователя с данным токеном (если он есть)
+// Если нет, то возвращается CHECK_IF_AUTHORIZED_RESULT_FALSE
 export const checkIfUserAuthorized = () => {
-    return dispatch => {
-        dispatch({type: CHECK_IF_AUTHORIZED_START});
-        setTimeout(() => {
-            dispatch({type: CHECK_IF_AUTHORIZED_RESULT_FALSE});
-        }, 2500);
-    };
+    const cookies = new Cookies();
+    const token = cookies.get(AUTH_TOKEN);
+
+    if (token) {
+        return dispatch => {
+            dispatch({type: CHECK_IF_AUTHORIZED_START, token});
+
+            axios.get(`/users/sec/${token}`).then(response => {
+                dispatch({ type: CHECK_IF_AUTHORIZED_RESULT_TRUE, response });
+            }).catch(err => {
+                dispatch({ type: CHECK_IF_AUTHORIZED_RESULT_FALSE, err });
+            });
+        };
+    } else {
+        return {type: CHECK_IF_AUTHORIZED_RESULT_FALSE};
+    }
 };
 
 export const submitRegistrationData = (name, password, confirmPassword) => {
@@ -81,6 +102,10 @@ export const submitLoginData = (name, password) => {
         dispatch({type: LOGIN_START, postData});
         axios.post('/users/login', postData).then(function (response) {
             dispatch({type: LOGIN_SUCCESS, response});
+            // Здесь нужно задать куки AUTH_TOKEN на клиенте. 
+            // Значение есть в response.headers['x-auth']
+            const cookies = new Cookies();
+            cookies.set(AUTH_TOKEN, response.headers['x-auth'], { path: '/' });
         }).catch(function (error) {
             const validationResult = ['Не удалось войти в систему. Проверьте логин и пароль'];
 

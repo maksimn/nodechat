@@ -44,4 +44,18 @@ mockRepository.loginUser = (name, password) => {
     });    
 };
 
+mockRepository.findUserByToken = token => {
+    return new Promise((resolve, reject) => {
+        const user = users.find(u => u.token.includes(token));
+
+        if (user) {
+            const {id, name} = user;
+
+            resolve({id, name});
+        } else {
+            reject();
+        }
+    });  
+};
+
 module.exports = mockRepository;

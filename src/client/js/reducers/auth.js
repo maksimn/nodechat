@@ -14,8 +14,7 @@ import {
 
 const initState = {
     isAuthorized: null,
-    authActiveTabIndex: 0,
-    token: null
+    authActiveTabIndex: 0
 };
 
 const auth = (state = initState, action) => {

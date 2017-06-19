@@ -6,6 +6,8 @@ const path = require('path');
 
 const mockRepository = require('./mockRepository');
 
+const repository = mockRepository;
+
 const app = express();
 const port = process.env.PORT;
 
@@ -14,10 +16,14 @@ const publicPath = path.join(__dirname, '../client');
 app.use(express.static(publicPath));
 app.use(bodyParser.json());
 
+app.listen(port, () => {
+    console.log(`Started up at port ${port}`);
+});
+
 app.post('/users', (req, res) => {
     const {name, password} = req.body;
 
-    mockRepository.addUser(name, password).then(() => {
+    repository.addUser(name, password).then(() => {
         const created = 201;
         
         res.status(created)
@@ -36,7 +42,7 @@ app.post('/users', (req, res) => {
 app.post('/users/login', (req, res) => {
     const {name, password} = req.body;
 
-    mockRepository.loginUser(name, password).then(result => {
+    repository.loginUser(name, password).then(result => {
         res.header('x-auth', result.token).send();
     }).catch(() => {
         const unauthorized = 409;
@@ -45,6 +51,12 @@ app.post('/users/login', (req, res) => {
     });
 });
 
-app.listen(port, () => {
-    console.log(`Started up at port ${port}`);
+app.get('/users/sec/:token', (req, res) => {
+    const {token} = req.params;
+
+    repository.findUserByToken(token).then(result => {
+        res.send(result);
+    }).catch(() => {
+        res.status(404).send();
+    });
 });
