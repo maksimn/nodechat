@@ -4,7 +4,7 @@
   "description": "",
   "main": "",
   "scripts": {
-    "start": "webpack && PORT=8000 node src/server/index.js",
+    "start": "webpack && node src/server/index.js",
     "test": "",
     "test-watch": ""
   },
