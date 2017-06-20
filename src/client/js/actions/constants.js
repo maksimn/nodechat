@@ -15,3 +15,5 @@ export const LOGIN_ERROR = 'LOGIN_ERROR';
 
 export const SET_LOGIN_TAB_ACTIVE = 'SET_LOGIN_TAB_ACTIVE';
 export const SET_REGISTER_TAB_ACTIVE = 'SET_REGISTER_TAB_ACTIVE';
+
+export const SET_USER = 'SET_USER';

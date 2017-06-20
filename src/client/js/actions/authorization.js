@@ -15,7 +15,8 @@ import {
     SET_REGISTER_TAB_ACTIVE,
     LOGIN_START,
     LOGIN_ERROR,
-    LOGIN_SUCCESS
+    LOGIN_SUCCESS,
+    SET_USER
 } from './constants';
 import {
     validateLoginData,
@@ -27,6 +28,8 @@ const AUTH_TOKEN = 'AUTH_TOKEN';
 
 const formValidationError = createAction(FORM_VALIDATION_ERROR);
 export const formValidationErrorReset = createAction(FORM_VALIDATION_ERROR_RESET);
+
+const setUser = createAction(SET_USER);
 
 export const setAuthPageActiveTab = index => {
     if (index === 0) {
@@ -52,6 +55,7 @@ export const checkIfUserAuthorized = () => {
 
             axios.get('/users/auth', { headers: { 'x-auth': token } }).then(response => {
                 dispatch({ type: CHECK_IF_AUTHORIZED_RESULT_TRUE, response });
+                dispatch(setUser(response.data));
             }).catch(err => {
                 dispatch({ type: CHECK_IF_AUTHORIZED_RESULT_FALSE, err });
             });
@@ -102,6 +106,7 @@ export const submitLoginData = (name, password) => {
         dispatch({type: LOGIN_START, postData});
         axios.post('/users/login', postData).then(function (response) {
             dispatch({type: LOGIN_SUCCESS, response});
+            dispatch(setUser(response.data));
             // Здесь нужно задать куки AUTH_TOKEN на клиенте. 
             // Значение есть в response.headers['x-auth']
             const cookies = new Cookies();

@@ -37,7 +37,14 @@ mockRepository.loginUser = (name, password) => {
 
         if (user) {
             user.token = [user.id.toString()];
-            resolve({token: user.token[0]});
+
+            const userData = {
+                id: user.id,
+                name: user.name,
+                token: user.token[0]
+            };
+
+            resolve(userData);
         } else {
             reject();
         }

@@ -43,7 +43,7 @@ app.post('/users/login', (req, res) => {
     const {name, password} = req.body;
 
     repository.loginUser(name, password).then(result => {
-        res.header('x-auth', result.token).send();
+        res.header('x-auth', result.token).send(result);
     }).catch(() => {
         const unauthorized = 409;
 
@@ -53,7 +53,6 @@ app.post('/users/login', (req, res) => {
 
 app.get('/users/auth', (req, res) => {
     const token = req.get('x-auth');
-    console.log('token', token);
 
     repository.findUserByToken(token).then(result => {
         res.send(result);

@@ -2,15 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Content from './Content';
+import Header from './Header';
 
 class Page extends React.Component {
     render() {
         const {isAuthorized} = this.props; // Авторизован ли пользователь
 
         return <div>
-            <div className="header">
-                <h1 className="header__title">Node.js чат</h1>
-            </div>
+            <Header />
 
             <Content isAuthorized={isAuthorized} />
 
