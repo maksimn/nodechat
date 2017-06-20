@@ -50,7 +50,7 @@ export const checkIfUserAuthorized = () => {
         return dispatch => {
             dispatch({type: CHECK_IF_AUTHORIZED_START, token});
 
-            axios.get(`/users/sec/${token}`).then(response => {
+            axios.get('/users/auth', { headers: { 'x-auth': token } }).then(response => {
                 dispatch({ type: CHECK_IF_AUTHORIZED_RESULT_TRUE, response });
             }).catch(err => {
                 dispatch({ type: CHECK_IF_AUTHORIZED_RESULT_FALSE, err });

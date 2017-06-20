@@ -51,8 +51,9 @@ app.post('/users/login', (req, res) => {
     });
 });
 
-app.get('/users/sec/:token', (req, res) => {
-    const {token} = req.params;
+app.get('/users/auth', (req, res) => {
+    const token = req.get('x-auth');
+    console.log('token', token);
 
     repository.findUserByToken(token).then(result => {
         res.send(result);
