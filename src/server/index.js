@@ -60,3 +60,13 @@ app.get('/users/auth', (req, res) => {
         res.status(404).send();
     });
 });
+
+app.post('/users/logout', (req, res) => {
+    const {token} = req.body;
+
+    repository.logoutUser(token).then(() => {
+        res.send();
+    }).catch(() => {
+        res.status(400).send();
+    });
+});

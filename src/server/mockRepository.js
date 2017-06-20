@@ -65,4 +65,15 @@ mockRepository.findUserByToken = token => {
     });  
 };
 
+mockRepository.logoutUser = token => {
+    return new Promise(resolve => {
+        const user = users.find(u => u.token.includes(token));
+        const tokens = user.token;
+
+        tokens.splice(tokens.indexOf(token), 1);
+
+        resolve();
+    });  
+};
+
 module.exports = mockRepository;

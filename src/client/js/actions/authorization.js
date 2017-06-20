@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {createAction} from 'redux-actions';
+import {createAction, createActions} from 'redux-actions';
 import Cookies from 'universal-cookie';
 
 import {
@@ -16,7 +16,10 @@ import {
     LOGIN_START,
     LOGIN_ERROR,
     LOGIN_SUCCESS,
-    SET_USER
+    SET_USER,
+    LOGOUT_START,
+    LOGOUT_SUCCESS,
+    LOGOUT_ERROR
 } from './constants';
 import {
     validateLoginData,
@@ -30,6 +33,9 @@ const formValidationError = createAction(FORM_VALIDATION_ERROR);
 export const formValidationErrorReset = createAction(FORM_VALIDATION_ERROR_RESET);
 
 const setUser = createAction(SET_USER);
+
+const {logoutStart, logoutSuccess, logoutError} = 
+    createActions(LOGOUT_START, LOGOUT_SUCCESS, LOGOUT_ERROR);
 
 export const setAuthPageActiveTab = index => {
     if (index === 0) {
@@ -116,6 +122,20 @@ export const submitLoginData = (name, password) => {
 
             dispatch({type: LOGIN_ERROR, error});
             dispatch(formValidationError(validationResult));
+        });
+    };
+};
+
+export const logout = () => {
+    return dispatch => {
+        const cookies = new Cookies();
+        const token = cookies.get(AUTH_TOKEN);
+
+        dispatch(logoutStart());
+        axios.post('/users/logout', {token}).then(() => {
+            dispatch(logoutSuccess());
+        }).catch(() => {
+            dispatch(logoutError());
         });
     };
 };

@@ -127,6 +127,10 @@ body {
     color: #fff;
 }
 
+.header__logout-button {
+    margin-left: 10px;
+}
+
 .auth-content {
     width: 300px;
     margin: 12px auto 0 auto;
