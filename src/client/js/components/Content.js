@@ -2,15 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import AuthContent from './AuthContent';
+import Chat from './Chat/Chat';
 
 class Content extends React.Component {
     render() {
         const {isAuthorized} = this.props;
 
         if (isAuthorized) {
-            return <div>
-                Пользователь авторизован
-            </div>;
+            return <Chat />;
         } else if (isAuthorized === null) {
             return <div>
                 Выполняется запрос данных...
