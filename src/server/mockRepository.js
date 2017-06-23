@@ -86,4 +86,13 @@ mockRepository.chatMessages = () => {
     return Promise.resolve(chatMessages);
 };
 
+mockRepository.addChatMessage = message => {
+    const newId = chatMessages.length;
+    const newMessage = message;
+    newMessage.id = newId;
+    chatMessages.push(newMessage);
+    
+    return Promise.resolve(newMessage);
+};
+
 module.exports = mockRepository;

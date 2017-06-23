@@ -81,3 +81,13 @@ app.get('/chatMessages', (req, res) => {
         res.status(400).send();
     });
 });
+
+app.post('/chatMessages', (req, res) => {
+    const message = req.body;
+
+    repository.addChatMessage(message).then(newMessage => {
+        res.send(newMessage);
+    }).catch(() => {
+        res.status(400).send();
+    });
+});
