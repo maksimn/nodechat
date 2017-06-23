@@ -152,3 +152,39 @@ body {
     margin: 14px;
     list-style-type: square;
 }
+
+.chat-room {
+    width: 300px;
+    border: 1px solid #696969;
+    margin: 16px auto 0 auto;
+}
+
+.chat-room__header {
+    height: 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.chat-message {
+    margin: 8px;
+}
+
+.chat-message__username {
+    color: #000;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.chat-message-input__textbox {
+    width: 275px;
+    height: 26px;
+    padding: 9px 0 0 13px;
+    margin: 4px 0 2px 4px;
+    resize: none;
+    border-color: #d3d9de;
+    border-radius: 3px;
+}
+
+.chat-room__chat-messages {
+    height: calc(100vh - 142px);
+    overflow: auto;
+}
