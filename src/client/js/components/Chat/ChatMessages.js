@@ -1,30 +1,32 @@
 import React from 'react';
-import ChatMessage from './ChatMessage';
+import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
 
-const messages = [
-    <ChatMessage key={0} message={ {id: 0, username: 'User1', text: 'ABC eee eee ABC eee eee ABC eee eee ABC eee eee ABC eee eeeABC eee eee'} } />,
-    <ChatMessage key={1} message={ {id: 1, username: 'User1', text: 'ABC234'} } />,
-    <ChatMessage key={2} message={ {id: 2, username: 'User2', text: 'XZ'} } />,
-    <ChatMessage key={3} message={ {id: 0, username: 'User1', text: 'ABC eee eee ABC eee eee ABC eee eee ABC eee eee ABC eee eeeABC eee eee'} } />,
-    <ChatMessage key={4} message={ {id: 1, username: 'User1', text: 'ABC234'} } />,
-    <ChatMessage key={5} message={ {id: 2, username: 'User2', text: 'XZ'} } />,
-    <ChatMessage key={6} message={ {id: 0, username: 'User1', text: 'ABC eee eee ABC eee eee ABC eee eee ABC eee eee ABC eee eeeABC eee eee'} } />,
-    <ChatMessage key={7} message={ {id: 1, username: 'User1', text: 'ABC234'} } />,
-    <ChatMessage key={8} message={ {id: 2, username: 'User2', text: 'XZ'} } />,
-    <ChatMessage key={9} message={ {id: 0, username: 'User1', text: 'ABC eee eee ABC eee eee ABC eee eee ABC eee eee ABC eee eeeABC eee eee'} } />,
-    <ChatMessage key={10} message={ {id: 1, username: 'User1', text: 'ABC234'} } />,
-    <ChatMessage key={11} message={ {id: 2, username: 'User2', text: 'XZ'} } />,
-    <ChatMessage key={12} message={ {id: 0, username: 'User1', text: 'ABC eee eee ABC eee eee ABC eee eee ABC eee eee ABC eee eeeABC eee eee'} } />,
-    <ChatMessage key={13} message={ {id: 1, username: 'User1', text: 'ABC234'} } />,
-    <ChatMessage key={14} message={ {id: 2, username: 'User2', text: 'XZ'} } />
-];
+import ChatMessage from './ChatMessage';
+import {getChatMessages} from '../../actions/chat';
 
 class ChatMessages extends React.Component {
+    componentWillMount() {
+        this.props.dispatch(getChatMessages());
+    }
+
     render() {
+        const messages = this.props.messages ? this.props.messages : [];
+
         return <div className="chat-room__chat-messages">
-            {messages}
+            {messages.map(
+                (message, ind) => (
+                    <ChatMessage key={ind} message={message} />                
+                ))}
         </div>;
     }
 }
 
-export default ChatMessages;
+ChatMessages.propTypes = {
+    dispatch: PropTypes.func,
+    messages: PropTypes.array
+};
+
+export default connect(
+    state => ({messages: state.chatMessages})
+)(ChatMessages);

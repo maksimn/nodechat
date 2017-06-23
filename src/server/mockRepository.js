@@ -9,6 +9,12 @@ const users = [{
     token: []
 }];
 
+const chatMessages = [{
+    id: 0,
+    username: '__Admin',
+    text: 'Добро пожаловать в чат.'
+}];
+
 mockRepository.addUser = (name, password) => {
     return new Promise((resolve, reject) => {
         if (users.find(u => u.name === name)) { 
@@ -74,6 +80,10 @@ mockRepository.logoutUser = token => {
 
         resolve();
     });  
+};
+
+mockRepository.chatMessages = () => {
+    return Promise.resolve(chatMessages);
 };
 
 module.exports = mockRepository;

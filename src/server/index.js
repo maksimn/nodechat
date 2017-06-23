@@ -73,3 +73,11 @@ app.post('/users/logout', (req, res) => {
         res.status(400).send();
     });
 });
+
+app.get('/chatMessages', (req, res) => {
+    repository.chatMessages().then(messages => {
+        res.send(messages);
+    }).catch(() => {
+        res.status(400).send();
+    });
+});
