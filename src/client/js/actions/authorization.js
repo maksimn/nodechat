@@ -116,7 +116,9 @@ export const submitLoginData = (name, password) => {
             // Здесь нужно задать куки AUTH_TOKEN на клиенте. 
             // Значение есть в response.headers['x-auth']
             const cookies = new Cookies();
-            cookies.set(AUTH_TOKEN, response.headers['x-auth'], { path: '/' });
+            const token = response.headers['x-auth'];
+
+            cookies.set(AUTH_TOKEN, token, { path: '/' });
         }).catch(function (error) {
             const validationResult = ['Не удалось войти в систему. Проверьте логин и пароль'];
 

@@ -21,13 +21,15 @@ class Header extends React.Component {
         return <div className="header">
             <h1 className="header__title">Node.js чат</h1>
 
-            {isAuthorized ? 
+            {isAuthorized ?
+
                 <div className="header__username">
                     {userName} 
                     <span className="header__logout-button">
                         <button onClick={this.onLogoutClick}>Выйти</button>
                     </span>
-                </div> 
+                </div>
+                
                 : null}
         </div>;
     }

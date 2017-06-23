@@ -43,11 +43,14 @@ app.post('/users/login', (req, res) => {
     const {name, password} = req.body;
 
     repository.loginUser(name, password).then(result => {
-        res.header('x-auth', result.token).send(result);
+        const {id, name} = result;
+
+        res.header('x-auth', result.token)
+           .send({id, name});
     }).catch(() => {
         const unauthorized = 409;
 
-        res.status(unauthorized).send({});
+        res.status(unauthorized).send();
     });
 });
 

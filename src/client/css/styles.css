@@ -105,7 +105,9 @@ table {
 /* КОНЕЦ дефолтных стилей react-tabs */
 
 body {
-    font-family: "Arial Black", Gadget, sans-serif;
+    font-size: .80em;
+    font-family: "Helvetica Neue", "Lucida Grande", "Segoe UI", Arial, Helvetica, Verdana, sans-serif;
+    color: #696969;
 }
 
 .header {
