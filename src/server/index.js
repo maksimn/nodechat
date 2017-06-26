@@ -15,19 +15,18 @@ const server = require('http').createServer(app);
 
 const io = require('socket.io')(server);
 
+const NEW_CHAT_MESSAGE = 'NEW_CHAT_MESSAGE';
+
 io.on('connection', socket => {
-    socket.on('NEW_CHAT_MESSAGE', message => {
-        // Если пришло новое сообщение чата, нужно
-        // 1. Добавить его в БД
-        // 2. В случае успешного добавления разослать всем клиентам
+    socket.on(NEW_CHAT_MESSAGE, message => {
+
         repository.addChatMessage(message).then(newMessage => {
-            io.emit('NEW_CHAT_MESSAGE', newMessage);
+            io.emit(NEW_CHAT_MESSAGE, newMessage);
         }).catch(() => {
-            socket.emit('NEW_CHAT_MESSAGE_ERROR');
         });
     });
-    // socket.on('disconnect', function(){});    
 });
+
 server.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
 });
@@ -36,10 +35,6 @@ const publicPath = path.join(__dirname, '../client');
 
 app.use(express.static(publicPath));
 app.use(bodyParser.json());
-
-// app.listen(port, () => {
-//     console.log(`Started up at port ${port}`);
-// });
 
 app.post('/users', (req, res) => {
     const {name, password} = req.body;

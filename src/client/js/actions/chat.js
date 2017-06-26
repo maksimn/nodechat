@@ -3,7 +3,8 @@ import {createAction} from 'redux-actions';
 import {
     GET_CHAT_MESSAGES_START, 
     GET_CHAT_MESSAGES_SUCCESS, 
-    GET_CHAT_MESSAGES_ERROR
+    GET_CHAT_MESSAGES_ERROR,
+    NEW_CHAT_MESSAGE
 } from './constants';
 
 const getChatMessagesStart = createAction(GET_CHAT_MESSAGES_START);
@@ -21,3 +22,7 @@ export const getChatMessages = () => {
          });
     };
 };
+
+export const newChatMessageAction = createAction(NEW_CHAT_MESSAGE);
+
+export const createChatMessage = (username, text) => ({username, text});

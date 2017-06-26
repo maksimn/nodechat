@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 import socketClient from 'socket.io-client';
 
+import {NEW_CHAT_MESSAGE} from '../../actions/constants';
+import {newChatMessageAction, createChatMessage} from '../../actions/chat';
+
 const socket = socketClient('http://localhost:8000');
 
 class ChatMessageInput extends React.Component {
@@ -13,8 +16,8 @@ class ChatMessageInput extends React.Component {
     componentDidMount() {
         const {dispatch} = this.props;
 
-        socket.on('NEW_CHAT_MESSAGE', newMessage => {
-            dispatch({type:'NEW_CHAT_MESSAGE', payload: newMessage});    
+        socket.on(NEW_CHAT_MESSAGE, newMessage => {
+            dispatch(newChatMessageAction(newMessage));    
         });
     }
 
@@ -26,10 +29,7 @@ class ChatMessageInput extends React.Component {
 
             this.setState({text: ''});
 
-            socket.emit('NEW_CHAT_MESSAGE', {
-                username,
-                text: this.state.text
-            });
+            socket.emit(NEW_CHAT_MESSAGE, createChatMessage(username, this.state.text));
         }
     }
 
