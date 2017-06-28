@@ -3,31 +3,33 @@ import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
 
 import ValidationErrors from './ValidationErrors';
-import {submitLoginData} from '../actions/authorization';
+import {submitRegistrationData} from '../../actions/authorization';
 
-class LoginForm extends React.Component {
+class RegistrationForm extends React.Component {
     constructor(props) {
         super(props);
 
-        this.onLoginDataSubmit = this.onLoginDataSubmit.bind(this);
+        this.onRegistrationDataSubmit = this.onRegistrationDataSubmit.bind(this);
         this.onNameChange = this.onNameChange.bind(this);
         this.onPasswordChange = this.onPasswordChange.bind(this);
+        this.onConfirmPasswordChange = this.onConfirmPasswordChange.bind(this);
     }
 
     componentWillMount() {
         this.setState({
             name: '',
-            password: ''
+            password: '',
+            confirmPassword: null
         });
     }
 
-    onLoginDataSubmit(e) {
+    onRegistrationDataSubmit(e) {
         e.preventDefault();
 
-        const {name, password} = this.state,
+        const {name, password, confirmPassword} = this.state,
             {dispatch} = this.props;
         
-        dispatch(submitLoginData(name, password));
+        dispatch(submitRegistrationData(name, password, confirmPassword));
     }
 
     onNameChange(e) {
@@ -44,8 +46,15 @@ class LoginForm extends React.Component {
         });
     }
 
+    onConfirmPasswordChange(e) {
+        this.setState({
+            ...this.state, 
+            confirmPassword: e.target.value
+        });
+    }
+
     render() {
-        return <form onSubmit={this.onLoginDataSubmit}>
+        return <form onSubmit={this.onRegistrationDataSubmit}>
 
             <div className="auth-form__field">
                 <div>Имя: </div>
@@ -59,19 +68,25 @@ class LoginForm extends React.Component {
                     <input type="password" onChange={this.onPasswordChange} />
                 </div>
             </div>
+            <div className="auth-form__field">
+                <div>Повтор пароля: </div>
+                <div>
+                    <input type="password" onChange={this.onConfirmPasswordChange} />
+                </div>
+            </div>
 
             <ValidationErrors />
-
+            
             <div className="auth-form__field">
-                <input type="submit" value="Войти" />
-            </div>
+                <input type="submit" value="Зарегистрироваться" />
+            </div>            
 
         </form>;
     }
 }
 
-LoginForm.propTypes = {
+RegistrationForm.propTypes = {
     dispatch: PropTypes.func
 };
 
-export default connect()(LoginForm);
+export default connect()(RegistrationForm);

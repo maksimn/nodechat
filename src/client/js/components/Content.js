@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import AuthContent from './AuthContent';
+import AuthContent from './Auth/AuthContent';
 import Chat from './Chat/Chat';
 
 class Content extends React.Component {

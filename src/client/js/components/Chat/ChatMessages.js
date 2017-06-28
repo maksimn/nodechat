@@ -24,7 +24,7 @@ class ChatMessages extends React.Component {
     updateScroll() {
         const {chatMessagesDiv} = this;
 
-        if (!(this.isScrolledFromBottomPos)) {
+        if (!(this.isScrolledFromBottomPos) && chatMessagesDiv) {
             chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
         }
     }
