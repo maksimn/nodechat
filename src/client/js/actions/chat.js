@@ -24,5 +24,3 @@ export const getChatMessages = () => {
 };
 
 export const newChatMessageAction = createAction(NEW_CHAT_MESSAGE);
-
-export const createChatMessage = (username, text) => ({username, text});

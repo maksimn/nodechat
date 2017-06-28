@@ -1,35 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {connect} from 'react-redux';
-import socketClient from 'socket.io-client';
 
-import {NEW_CHAT_MESSAGE} from '../../actions/constants';
-import {newChatMessageAction, createChatMessage} from '../../actions/chat';
-
-const socket = socketClient('http://localhost:8000');
+import {emitNewChatMessage} from '../../sockets';
 
 class ChatMessageInput extends React.Component {
     componentWillMount() {
         this.setState({text: ''});
     }
 
-    componentDidMount() {
-        const {dispatch} = this.props;
-
-        socket.on(NEW_CHAT_MESSAGE, newMessage => {
-            dispatch(newChatMessageAction(newMessage));    
-        });
-    }
-
     onMessageSubmit(e) {
         const enter = 13;
 
         if (e.keyCode === enter) {
-            const {username} = this.props;
-
+            const {username} = this.props, {text} = this.state;
             this.setState({text: ''});
-
-            socket.emit(NEW_CHAT_MESSAGE, createChatMessage(username, this.state.text));
+            emitNewChatMessage(username, text);
         }
     }
 
