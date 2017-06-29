@@ -38,8 +38,7 @@ class ChatMessageInput extends React.Component {
 }
 
 ChatMessageInput.propTypes = {
-    username: PropTypes.string,
-    dispatch: PropTypes.func
+    username: PropTypes.string
 };
 
 export default connect(state => ({

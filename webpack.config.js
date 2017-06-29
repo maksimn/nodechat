@@ -1,5 +1,3 @@
-var debug = process.env.NODE_ENV !== "production";
-var webpack = require('webpack');
 var path = require('path');
 
 module.exports = {
@@ -20,7 +18,7 @@ module.exports = {
         ]
     },
     output: {
-        path: path.join(__dirname, "src/client"),
-        filename: "build.js"
+        path: path.join(__dirname, "output"),
+        filename: "client.js"
     }
 };

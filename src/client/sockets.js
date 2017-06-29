@@ -4,7 +4,7 @@ import { NEW_CHAT_MESSAGE } from './actions/constants';
 import { newChatMessageAction } from './actions/chat';
 import store from './store';
 
-const socket = socketIOClient('http://localhost:8000');
+const socket = socketIOClient(window.location.origin);
 
 const createChatMessage = (username, text) => ({username, text});
 
