@@ -58,7 +58,7 @@ router.post('/users/logout', (req, res) => {
     });
 });
 
-router.get('/chatMessages', (req, res) => {
+router.get('/api/v1/chatMessages', (req, res) => {
     repository.chatMessages().then(messages => {
         res.send(messages);
     }).catch(() => {

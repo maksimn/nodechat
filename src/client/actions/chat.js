@@ -15,7 +15,7 @@ export const getChatMessages = () => {
     return dispatch => {
          dispatch(getChatMessagesStart());
 
-         axios.get('/chatMessages').then(response => {
+         axios.get('/api/v1/chatMessages').then(response => {
              dispatch(getChatMessagesSuccess(response.data));
          }).catch(err => {
              dispatch(getChatMessagesError(err));
