@@ -7,19 +7,12 @@ const router = express.Router();
 router.post('/users', (req, res) => {
     const { name, password } = req.body;
 
-    repository.addUser(name, password).then(() => {
+    repository.addUser(name, password).then(user => {
         const created = 201;
 
-        res.status(created)
-            .send({ name });
+        res.status(created).send(user);
     }).catch(e => {
-        const conflict = 409, serverError = 500;
-
-        if (e.code === conflict) {
-            return res.status(conflict).send({ name });
-        }
-
-        res.status(serverError).send({ name });
+        res.status(400).send(e);
     });
 });
 

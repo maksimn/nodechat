@@ -5,8 +5,11 @@ const mockRepository = {};
 const users = [{
     id: 0,
     name: 'test',
-    password: 'test',
-    token: []
+    password: 'adfkdfkgjlkdsfvmxcvm',
+    tokens: [{
+        access: 'auth',
+        token: 'qweertxvxzcvasdqweqweassadkkmnxzchsdfbhzdfhsd'
+    }]
 }];
 
 const chatMessages = [{
@@ -18,22 +21,24 @@ const chatMessages = [{
 mockRepository.addUser = (name, password) => {
     return new Promise((resolve, reject) => {
         if (users.find(u => u.name === name)) { 
-            const err = new Error();
+            const err = new Error('A user with given name already exists.');
             err.code = 409;
 
             reject(err);
         }
 
-        const len = users.length;
+        const id = users.length;
 
-        users.push({
-            id: len,
+        const user = {
+            id,
             name,
             password,
             token: []
-        });
+        };
 
-        resolve({name});
+        users.push(user);
+
+        resolve(user);
     });
 };
 
