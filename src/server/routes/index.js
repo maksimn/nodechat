@@ -8,9 +8,7 @@ router.post('/users', (req, res) => {
     const { name, password } = req.body;
 
     repository.addUser(name, password).then(user => {
-        const created = 201;
-
-        res.status(created).send(user);
+        res.status(201).send(user);
     }).catch(e => {
         res.status(400).send(e);
     });
@@ -20,10 +18,8 @@ router.post('/users/login', (req, res) => {
     const { name, password } = req.body;
 
     repository.loginUser(name, password).then(result => {
-        const { id, name } = result;
-
         res.header('x-auth', result.token)
-            .send({ id, name });
+            .send(result.user);
     }).catch(() => {
         const unauthorized = 409;
 
