@@ -6,14 +6,21 @@ const app = require('../app');
 const mockRepository = require('../mockRepository');
 const repository = mockRepository;
 
+const user1 = {name: 'andrew', password: '123abc'},
+    user2 = {name: 'zilberman', password: '123'};
+
 const populateUsers = done => {
-    const firstUser = repository.addUser('andrew', '123abc'),
-          secondUser = repository.addUser('zilberman', '123');
+    const firstUser = repository.addUser(user1.name, user1.password),
+        secondUser = repository.addUser(user2.name, user2.password);
 
     Promise.all([firstUser, secondUser]).then(() => { done(); });
 };
 
-before(populateUsers);
+beforeEach(populateUsers);
+afterEach(done => {
+    mockRepository.getUsers().length = 0;
+    done();
+});
 
 describe('POST /users', () => {
     it('should create a user', (done) => {
@@ -61,6 +68,54 @@ describe('POST /users', () => {
                 password: '123'
             })
             .expect(400)
+            .end(done);
+    });
+});
+
+describe('POST /users/login', () => {
+    it('should login user and return auth token', (done) => {
+        const user = user2;
+
+        request(app)
+            .post('/users/login')
+            .send({
+                name: user.name,
+                password: user.password
+            })
+            .expect(200)
+            .expect((res) => {
+                expect(res.headers['x-auth']).toExist();
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+
+                const users = repository.getUsers();
+                const _user = users.find(u => u.name === user.name);
+
+                if (_user) {
+                    expect(_user.token).toBe(res.headers['x-auth']);
+                    done();
+                } else {
+                    done(new Error('User and its token not found in repository'));
+                }
+            });
+    });
+
+    it('should reject invalid login', (done) => {
+        const user = user2;
+
+        request(app)
+            .post('/users/login')
+            .send({
+                name: user2.name,
+                password: user2.password + '1'
+            })
+            .expect(401)
+            .expect((res) => {
+                expect(res.headers['x-auth']).toNotExist();
+            })
             .end(done);
     });
 });
