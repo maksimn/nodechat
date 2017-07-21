@@ -10,12 +10,10 @@ const populateUsers = done => {
     const firstUser = repository.addUser('andrew', '123abc'),
           secondUser = repository.addUser('zilberman', '123');
 
-    Promise.all([firstUser, secondUser]).then(() => { 
-        done();
-    });
+    Promise.all([firstUser, secondUser]).then(() => { done(); });
 };
 
-beforeEach(populateUsers);
+before(populateUsers);
 
 describe('POST /users', () => {
     it('should create a user', (done) => {
@@ -47,9 +45,22 @@ describe('POST /users', () => {
             });
     });
 
-    // it('should return validation errors if request invalid', (done) => {
-    // });
+    it('should return HTTP 400 if request invalid', done => {
+        request(app)
+            .post('/users')
+            .send({})
+            .expect(400)
+            .end(done);
+    });
 
-    // it('should not create user if email in use', (done) => {
-    // });
+    it('should not create user if name in use', done => {
+        request(app)
+            .post('/users')
+            .send({
+                name: 'andrew',
+                password: '123'
+            })
+            .expect(400)
+            .end(done);
+    });
 });
