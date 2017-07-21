@@ -4,21 +4,26 @@ const bcrypt = require('bcryptjs');
 
 const mockRepository = {};
 
-const users = [{
-    id: 0,
-    name: 'test',
-    password: 'adfkdfkgjlkdsfvmxcvm',
-    token: 'dsfadf;l.sdafsdaf.sadfsdfdsfsadfasd'
-}];
+// Схема Данных:
 
-const chatMessages = [{
-    id: 0,
-    username: '__Admin',
-    text: 'Добро пожаловать в чат.'
-}];
+// user = {
+//     id: 0,
+//     name: 'test',
+//     password: 'adfkdfkgjlkdsfvmxcvm',
+//     token: 'dsfadf;l.sdafsdaf.sadfsdfdsfsadfasd'
+// };
+
+// message = {
+//     id: 0,
+//     username: '__Admin',
+//     text: 'Добро пожаловать в чат.'
+// };
+
+const users = [];
+const chatMessages = [];
 
 const generateAuthToken = user => {
-    const token = jwt.sign({id: user.id.toString()}, '123abc').toString();
+    const token = jwt.sign({id: user.id}, '123abc').toString();
     return token;
 };
 
@@ -115,6 +120,10 @@ mockRepository.addChatMessage = message => {
     chatMessages.push(newMessage);
     
     return Promise.resolve(newMessage);
+};
+
+mockRepository.getUsers = () => {
+    return users;
 };
 
 module.exports = mockRepository;

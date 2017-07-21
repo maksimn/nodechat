@@ -5,7 +5,7 @@
   "main": "",
   "scripts": {
     "start": "webpack && node src/server/app.js",
-    "test": "",
+    "test": "export NODE_ENV=test || SET NODE_ENV=test && mocha src/server/tests/app.tests.js",
     "test-watch": ""
   },
   "engines": {},
@@ -44,6 +44,9 @@
   },
   "devDependencies": {
     "eslint": "^4.0.0",
-    "eslint-plugin-react": "^7.1.0"
+    "eslint-plugin-react": "^7.1.0",
+    "expect": "^1.20.2",
+    "mocha": "^3.4.2",
+    "supertest": "^3.0.0"
   }
 }
