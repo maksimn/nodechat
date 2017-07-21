@@ -1,5 +1,6 @@
 const Promise = require('promise-polyfill');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 const mockRepository = {};
 
@@ -18,7 +19,6 @@ const chatMessages = [{
 
 const generateAuthToken = user => {
     const token = jwt.sign({id: user.id.toString()}, '123abc').toString();
-    user.token = token;
     return token;
 };
 
@@ -31,27 +31,47 @@ mockRepository.addUser = (name, password) => {
             reject(err);
         }
 
-        const id = users.length;
-        const user = {id, name, password, token: null};
+        const rounds = 5;
 
-        users.push(user);
-        resolve({id, name});
+        bcrypt.genSalt(rounds, (err, salt) => {
+            if (err) {
+                reject(err);
+            }
+
+            bcrypt.hash(password, salt, (err, hash) => {
+                if (err) {
+                    reject(err);
+                }
+
+                const id = users.length;
+                const user = { id, name, password: hash, token: null };
+                users.push(user);
+                resolve({ id, name });
+            });
+        });
     });
 };
 
 mockRepository.loginUser = (name, password) => {
     return new Promise((resolve, reject) => {
-        const user = users.find(u => u.name === name && u.password === password);
+        const user = users.find(u => u.name === name);
 
         if (user) {
-            const token = generateAuthToken(user);
+            bcrypt.compare(password, user.password, (err, result) => {
+                if (result) {
+                    const token = generateAuthToken(user);
+                    user.token = token;
 
-            resolve({
-                user: {
-                    id: user.id, 
-                    name: user.name
-                }, 
-                token
+                    resolve({
+                        user: {
+                            id: user.id,
+                            name: user.name
+                        },
+                        token
+                    });
+                } else {
+                    reject();
+                }
             });
         } else {
             reject();

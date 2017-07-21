@@ -21,7 +21,7 @@ router.post('/users/login', (req, res) => {
         res.header('x-auth', result.token)
             .send(result.user);
     }).catch(() => {
-        const unauthorized = 409;
+        const unauthorized = 401;
 
         res.status(unauthorized).send();
     });
