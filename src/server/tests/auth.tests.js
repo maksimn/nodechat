@@ -104,8 +104,6 @@ describe('POST /users/login', () => {
     });
 
     it('should reject invalid login', (done) => {
-        const user = user2;
-
         request(app)
             .post('/users/login')
             .send({
@@ -117,5 +115,35 @@ describe('POST /users/login', () => {
                 expect(res.headers['x-auth']).toNotExist();
             })
             .end(done);
+    });
+});
+
+describe('POST /users/logout', () => {
+    it('should remove auth token on logout', (done) => {
+        repository.loginUser(user2.name, user2.password).then(result => {
+            const {token} = result;
+
+            request(app)
+                .post('/users/logout')
+                .send({token})
+                .expect(200)
+                .end(err => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const users = repository.getUsers();
+                    const user = users.find(u => u.name === user2.name);
+
+                    if (user) {
+                        expect(user.token).toBeFalsy();
+                        done();
+                    } else {
+                        done(new Error('This user does not exist'));
+                    }
+                });
+        }).catch(e => {
+            done(e);
+        });
     });
 });

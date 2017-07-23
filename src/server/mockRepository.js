@@ -99,13 +99,14 @@ mockRepository.findUserByToken = token => {
 };
 
 mockRepository.logoutUser = token => {
-    return new Promise(resolve => {
-        const user = users.find(u => u.token.includes(token));
-        const tokens = user.token;
-
-        tokens.splice(tokens.indexOf(token), 1);
-
-        resolve();
+    return new Promise((resolve, reject) => {
+        const user = users.find(u => u.token === token);
+        if (user) {
+            user.token = null;
+            resolve();
+        } else {
+            reject();
+        }
     });  
 };
 
