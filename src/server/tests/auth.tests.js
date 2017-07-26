@@ -120,12 +120,7 @@ describe('POST /users/login', () => {
 
 describe('POST /users/logout', () => {
     it('should remove auth token on logout', (done) => {
-        request(app)
-            .post('/users/login')
-            .send({
-                name: user2.name,
-                password: user2.password
-            })
+        loginAsUser2()
             .end((err, res) => {
                 if (err) return done(err);
 
@@ -156,12 +151,7 @@ describe('POST /users/logout', () => {
 
 describe('GET /users/auth', () => {
     it('should return user by his token if he is logged in', (done) => {
-        request(app)
-            .post('/users/login')
-            .send({
-                name: user2.name,
-                password: user2.password
-            })
+        loginAsUser2()
             .end((err, res) => {
                 if (err) return done(err);
 
@@ -181,12 +171,7 @@ describe('GET /users/auth', () => {
     });
 
     it('should return HTTP 404 if token is wrong', (done) => {
-        request(app)
-            .post('/users/login')
-            .send({
-                name: user2.name,
-                password: user2.password
-            })
+        loginAsUser2()
             .end((err, res) => {
                 if (err) return done(err);
 
@@ -200,3 +185,12 @@ describe('GET /users/auth', () => {
             });
     });
 });
+
+const loginAsUser2 = () => {
+    return request(app)
+        .post('/users/login')
+        .send({
+            name: user2.name,
+            password: user2.password
+        });
+};
