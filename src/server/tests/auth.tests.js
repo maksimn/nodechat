@@ -6,8 +6,8 @@ const app = require('../app');
 const mockRepository = require('../mockRepository');
 const repository = mockRepository;
 
-const user1 = {name: 'andrew', password: '123abc'},
-    user2 = {name: 'zilberman', password: '123'};
+const user1 = { name: 'andrew', password: '123abc' },
+    user2 = { name: 'zilberman', password: '123' };
 
 const populateUsers = done => {
     const firstUser = repository.addUser(user1.name, user1.password),
@@ -16,181 +16,183 @@ const populateUsers = done => {
     Promise.all([firstUser, secondUser]).then(() => { done(); });
 };
 
-beforeEach(populateUsers);
-afterEach(done => {
-    mockRepository.getUsers().length = 0;
-    done();
-});
-
-describe('POST /users', () => {
-    it('should create a user', (done) => {
-        const name = 'example';
-        const password = '123mnb!';
-
-        request(app)
-            .post('/users')
-            .send({ name, password })
-            .expect(201)
-            .expect((res) => {
-                expect(res.body.id).toExist();
-                expect(res.body.name).toBe(name);
-            })
-            .end((err) => {
-                if (err) {
-                    return done(err);
-                }
-
-                const users = repository.getUsers();
-                const user = users.find(u => u.name === name);
-                if (user) {
-                    expect(user).toExist();
-                    expect(user.password).toNotBe(password);
-                    done();
-                } else {
-                    done(new Error('User not added to repo'));
-                }
-            });
+describe('Authorization tests', () => {
+    beforeEach(populateUsers);
+    afterEach(done => {
+        mockRepository.getUsers().length = 0;
+        done();
     });
 
-    it('should return HTTP 400 if request invalid', done => {
-        request(app)
-            .post('/users')
-            .send({})
-            .expect(400)
-            .end(done);
+    describe('POST /users', () => {
+        it('should create a user', (done) => {
+            const name = 'example';
+            const password = '123mnb!';
+
+            request(app)
+                .post('/users')
+                .send({ name, password })
+                .expect(201)
+                .expect((res) => {
+                    expect(res.body.id).toExist();
+                    expect(res.body.name).toBe(name);
+                })
+                .end((err) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const users = repository.getUsers();
+                    const user = users.find(u => u.name === name);
+                    if (user) {
+                        expect(user).toExist();
+                        expect(user.password).toNotBe(password);
+                        done();
+                    } else {
+                        done(new Error('User not added to repo'));
+                    }
+                });
+        });
+
+        it('should return HTTP 400 if request invalid', done => {
+            request(app)
+                .post('/users')
+                .send({})
+                .expect(400)
+                .end(done);
+        });
+
+        it('should not create user if name in use', done => {
+            request(app)
+                .post('/users')
+                .send({
+                    name: 'andrew',
+                    password: '123'
+                })
+                .expect(400)
+                .end(done);
+        });
     });
 
-    it('should not create user if name in use', done => {
-        request(app)
-            .post('/users')
-            .send({
-                name: 'andrew',
-                password: '123'
-            })
-            .expect(400)
-            .end(done);
+    describe('POST /users/login', () => {
+        it('should login user and return auth token', (done) => {
+            const user = user2;
+
+            request(app)
+                .post('/users/login')
+                .send({
+                    name: user.name,
+                    password: user.password
+                })
+                .expect(200)
+                .expect((res) => {
+                    expect(res.headers['x-auth']).toExist();
+                })
+                .end((err, res) => {
+                    if (err) {
+                        return done(err);
+                    }
+
+                    const users = repository.getUsers();
+                    const _user = users.find(u => u.name === user.name);
+
+                    if (_user) {
+                        expect(_user.token).toBe(res.headers['x-auth']);
+                        done();
+                    } else {
+                        done(new Error('User and its token not found in repository'));
+                    }
+                });
+        });
+
+        it('should reject invalid login', (done) => {
+            request(app)
+                .post('/users/login')
+                .send({
+                    name: user2.name,
+                    password: user2.password + '1'
+                })
+                .expect(401)
+                .expect((res) => {
+                    expect(res.headers['x-auth']).toNotExist();
+                })
+                .end(done);
+        });
     });
-});
 
-describe('POST /users/login', () => {
-    it('should login user and return auth token', (done) => {
-        const user = user2;
+    describe('POST /users/logout', () => {
+        it('should remove auth token on logout', (done) => {
+            loginAsUser2()
+                .end((err, res) => {
+                    if (err) return done(err);
 
-        request(app)
-            .post('/users/login')
-            .send({
-                name: user.name,
-                password: user.password
-            })
-            .expect(200)
-            .expect((res) => {
-                expect(res.headers['x-auth']).toExist();
-            })
-            .end((err, res) => {
-                if (err) {
-                    return done(err);
-                }
+                    const token = res.headers['x-auth'];
 
-                const users = repository.getUsers();
-                const _user = users.find(u => u.name === user.name);
+                    request(app)
+                        .post('/users/logout')
+                        .send({ token })
+                        .expect(200)
+                        .end(err => {
+                            if (err) {
+                                return done(err);
+                            }
 
-                if (_user) {
-                    expect(_user.token).toBe(res.headers['x-auth']);
-                    done();
-                } else {
-                    done(new Error('User and its token not found in repository'));
-                }
-            });
+                            const users = repository.getUsers();
+                            const user = users.find(u => u.name === user2.name);
+
+                            if (user) {
+                                expect(user.token).toBeFalsy();
+                                done();
+                            } else {
+                                done(new Error('This user does not exist'));
+                            }
+                        });
+                });
+        });
     });
 
-    it('should reject invalid login', (done) => {
-        request(app)
+    describe('GET /users/auth', () => {
+        it('should return user by his token if he is logged in', (done) => {
+            loginAsUser2()
+                .end((err, res) => {
+                    if (err) return done(err);
+
+                    const token = res.headers['x-auth'];
+
+                    request(app)
+                        .get('/users/auth')
+                        .set('x-auth', token)
+                        .expect(200)
+                        .end((err, res) => {
+                            if (err) return done(err);
+
+                            expect(res.body.name).toBe(user2.name);
+                            done();
+                        });
+                });
+        });
+
+        it('should return HTTP 404 if token is wrong', (done) => {
+            loginAsUser2()
+                .end((err, res) => {
+                    if (err) return done(err);
+
+                    const token = res.headers['x-auth'];
+
+                    request(app)
+                        .get('/users/auth')
+                        .set('x-auth', token + 'a')
+                        .expect(404)
+                        .end(done);
+                });
+        });
+    });
+
+    const loginAsUser2 = () => {
+        return request(app)
             .post('/users/login')
             .send({
                 name: user2.name,
-                password: user2.password + '1'
-            })
-            .expect(401)
-            .expect((res) => {
-                expect(res.headers['x-auth']).toNotExist();
-            })
-            .end(done);
-    });
-});
-
-describe('POST /users/logout', () => {
-    it('should remove auth token on logout', (done) => {
-        loginAsUser2()
-            .end((err, res) => {
-                if (err) return done(err);
-
-                const token = res.headers['x-auth'];
-
-                request(app)
-                    .post('/users/logout')
-                    .send({ token })
-                    .expect(200)
-                    .end(err => {
-                        if (err) {
-                            return done(err);
-                        }
-
-                        const users = repository.getUsers();
-                        const user = users.find(u => u.name === user2.name);
-
-                        if (user) {
-                            expect(user.token).toBeFalsy();
-                            done();
-                        } else {
-                            done(new Error('This user does not exist'));
-                        }
-                    });
+                password: user2.password
             });
-    });
+    };
 });
-
-describe('GET /users/auth', () => {
-    it('should return user by his token if he is logged in', (done) => {
-        loginAsUser2()
-            .end((err, res) => {
-                if (err) return done(err);
-
-                const token = res.headers['x-auth'];
-
-                request(app)
-                    .get('/users/auth')
-                    .set('x-auth', token)
-                    .expect(200)
-                    .end((err, res) => {
-                        if (err) return done(err);
-
-                        expect(res.body.name).toBe(user2.name);
-                        done();
-                    });
-            });
-    });
-
-    it('should return HTTP 404 if token is wrong', (done) => {
-        loginAsUser2()
-            .end((err, res) => {
-                if (err) return done(err);
-
-                const token = res.headers['x-auth'];
-
-                request(app)
-                    .get('/users/auth')
-                    .set('x-auth', token + 'a')
-                    .expect(404)
-                    .end(done);
-            });
-    });
-});
-
-const loginAsUser2 = () => {
-    return request(app)
-        .post('/users/login')
-        .send({
-            name: user2.name,
-            password: user2.password
-        });
-};

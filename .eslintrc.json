@@ -1,9 +1,10 @@
 {
     "env": {
         "browser": true,
+        "jasmine": true,
         "node": true
     },
-    "extends": ["eslint:recommended", "plugin:react/recommended"],
+    "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:jasmine/recommended"],
     "parserOptions": {
         "ecmaVersion": 6,
         "sourceType": "module",
@@ -12,6 +13,7 @@
             "jsx": true
         }
     },
+    "plugins": ["jasmine"],
     "rules": {
         "no-console": "off",
         "semi": 2
