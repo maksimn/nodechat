@@ -1,5 +1,5 @@
-const express = require('express');
-const mockRepository = require('../mockRepository');
+import express from 'express';
+import mockRepository from '../mockRepository';
 
 const repository = mockRepository;
 const router = express.Router();
@@ -55,4 +55,4 @@ router.get('/api/v1/chatMessages', (req, res) => {
     });
 });
 
-module.exports = router;
+export default router;

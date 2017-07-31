@@ -1,4 +1,4 @@
 node_modules
 output/client.js
 npm-debug.log
-server.js
+output/server.js

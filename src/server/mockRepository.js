@@ -1,6 +1,6 @@
-const Promise = require('promise-polyfill');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+import Promise from 'promise-polyfill';
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 const mockRepository = {};
 
@@ -127,4 +127,4 @@ mockRepository.getUsers = () => {
     return users;
 };
 
-module.exports = mockRepository;
+export default mockRepository;

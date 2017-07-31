@@ -1,10 +1,11 @@
-const socketIO = require('socket.io');
-const mockRepository = require('./mockRepository');
+import socketIO from 'socket.io';
+import mockRepository from './mockRepository';
+
 const repository = mockRepository;
 
 const NEW_CHAT_MESSAGE = 'NEW_CHAT_MESSAGE';
 
-module.exports = server => {
+const sockets = server => {
     const io = socketIO(server);
     
     io.on('connection', socket => {
@@ -18,3 +19,4 @@ module.exports = server => {
     });
 };
 
+export default sockets;

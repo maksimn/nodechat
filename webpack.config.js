@@ -1,21 +1,18 @@
 var path = require('path');
 var nodeExternals = require('webpack-node-externals');
 
-var LOADERS = [
-    {
-        test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel-loader',
-        query: {
-            presets: ['react', 'es2015', 'stage-0'],
-            plugins: ['react-html-attrs', 'transform-decorators-legacy', 'transform-class-properties'],
-        }
-    },
-    {
-        test: /\.json$/,
-        loader: 'json-loader'
+var LOADERS = [{
+    test: /\.jsx?$/,
+    exclude: /(node_modules|bower_components)/,
+    loader: 'babel-loader',
+    query: {
+        presets: ['react', 'es2015', 'stage-0'],
+        plugins: ['react-html-attrs', 'transform-decorators-legacy', 'transform-class-properties'],
     }
-];
+}, {
+    test: /\.json$/,
+    loader: 'json-loader'
+}];
 
 module.exports = [{
     devtool: "inline-source-map",

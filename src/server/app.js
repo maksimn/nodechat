@@ -1,23 +1,23 @@
-require('./config/appConfig');
+import bodyParser from 'body-parser';
+import express from 'express';
+import http from 'http';
 
-const express = require('express');
-const bodyParser = require('body-parser');
+import './config/appConfig';
+import appRouter from './routes';
+import sockets from './sockets';
 
 const app = express();
 const port = process.env.PORT;
-const server = require('http').createServer(app);
+const server = http.createServer(app);
 
 app.use(express.static('./output'));
 app.use(bodyParser.json());
 
-const appRouter = require('./routes');
 app.use(appRouter);
-
-const sockets = require('./sockets');
 sockets(server);
 
 server.listen(port, () => {
     console.log(`Server is listening on port ${port}`);
 });
 
-module.exports = app;
+export default app;
