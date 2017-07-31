@@ -5,7 +5,7 @@
   "main": "",
   "scripts": {
     "start": "webpack && node output/server.js",
-    "test": "export NODE_ENV=test || SET NODE_ENV=test && mocha src/server/tests/*.tests.js",
+    "test": "webpack && export NODE_ENV=test || SET NODE_ENV=test && ./node_modules/mocha/bin/mocha output/tests/*.tests.js",
     "test-watch": ""
   },
   "engines": {},

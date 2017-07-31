@@ -2,3 +2,4 @@ node_modules
 output/client.js
 npm-debug.log
 output/server.js
+output/tests/

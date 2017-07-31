@@ -14,7 +14,32 @@ var LOADERS = [{
     loader: 'json-loader'
 }];
 
-module.exports = [{
+var commonServerKeys = {
+    target: "node",
+    externals: [nodeExternals()],
+    devtool: "inline-source-map",
+    module: {
+        loaders: LOADERS
+    }  
+};
+
+var serverKeys = Object.assign({}, commonServerKeys, {
+    entry: "./src/server/app.js",
+    output: {
+        path: path.join(__dirname, "output"),
+        filename: "server.js"
+    }
+});
+
+var serverTestsKeys = Object.assign({}, commonServerKeys, {
+    entry: "./src/server/tests/auth.tests.js",
+    output: {
+        path: path.join(__dirname, "output/tests"),
+        filename: "auth.tests.js"
+    }
+});
+
+var clientKeys = {
     devtool: "inline-source-map",
     entry: "./src/client/index.js",
     module: {
@@ -24,16 +49,6 @@ module.exports = [{
         path: path.join(__dirname, "output"),
         filename: "client.js"
     }
-}, {
-    target: "node",
-    externals: [nodeExternals()],
-    devtool: "inline-source-map",
-    entry: "./src/server/app.js",
-    module: {
-        loaders: LOADERS
-    },
-    output: {
-        path: path.join(__dirname, "output"),
-        filename: "server.js"
-    }
-}];
+};
+
+module.exports = [clientKeys, serverKeys, serverTestsKeys];

@@ -2,8 +2,8 @@ const Promise = require('promise-polyfill');
 const expect = require('expect');
 const request = require('supertest');
 
-const app = require('../app');
-const mockRepository = require('../mockRepository');
+import mockRepository from '../mockRepository';
+import app from '../app';
 const repository = mockRepository;
 
 const user1 = { name: 'andrew', password: '123abc' },
