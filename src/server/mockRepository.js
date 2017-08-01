@@ -115,11 +115,8 @@ mockRepository.chatMessages = () => {
 };
 
 mockRepository.addChatMessage = message => {
-    const newId = chatMessages.length;
-    const newMessage = message;
-    newMessage.id = newId;
+    const newMessage = {...message, id: chatMessages.length};
     chatMessages.push(newMessage);
-    
     return Promise.resolve(newMessage);
 };
 
