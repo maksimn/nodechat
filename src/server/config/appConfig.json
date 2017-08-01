@@ -1,8 +1,10 @@
 {
     "test": {
-        "PORT": 8000
+        "PORT": 8000,
+        "JWT_SECRET": "abc123"
     },
     "development": {
-        "PORT": 8000
+        "PORT": 8000,
+        "JWT_SECRET": "abc123"
     }
 }

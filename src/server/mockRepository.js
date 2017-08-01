@@ -23,7 +23,8 @@ const users = [];
 const chatMessages = [];
 
 const generateAuthToken = user => {
-    const token = jwt.sign({id: user.id}, '123abc').toString();
+    const secret = process.env['JWT_SECRET'];
+    const token = jwt.sign({id: user.id}, secret).toString();
     return token;
 };
 
