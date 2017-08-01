@@ -12,6 +12,6 @@ router.post('/users/login', authRouteHandler.login());
 router.get('/users/auth', authRouteHandler.checkIfAuthorized());
 router.post('/users/logout', authRouteHandler.logout());
 
-router.get('/api/v1/chatMessages', chatRouteHandler.newMessage());
+router.get('/api/v1/chatMessages', chatRouteHandler.getMessages());
 
 export default router;
