@@ -1,7 +1,7 @@
 import Promise from 'promise-polyfill';
 import bcrypt from 'bcryptjs';
 
-import generateAuthToken from './generateAuthToken';
+import {generateAuthToken} from './appSecurity';
 
 const mockRepository = {};
 

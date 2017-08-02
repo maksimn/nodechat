@@ -1,6 +1,7 @@
 import Promise from 'promise-polyfill';
 import { MongoClient } from 'mongodb';
-import bcrypt from 'bcryptjs';
+
+import {passwordHash} from './appSecurity';
 
 const cnnString = process.env['MONGODB_URI'];
 
@@ -10,25 +11,29 @@ export default class MongoRepository {
             MongoClient.connect(cnnString, function(err, db) {
                 if (err) reject(err);
 
-                const rounds = 5;
+                db.collection('users').findOne({name}, (err, userDoc) => {
+                    if (err) reject(err);
 
-                bcrypt.genSalt(rounds, (err, salt) => {
-                    if (err) { reject(err); }
+                    if (userDoc) {
+                        const error = new Error('A user with given name already exists.');
+                        error.code = 409;
+                        reject(error);
+                    }
 
-                    bcrypt.hash(password, salt, (err, hash) => {
-                        if (err) { reject(err); }
-
+                    passwordHash(password).then(hash => {
                         const userDoc = { name, password: hash, token: null };
                         db.collection('users').insert(userDoc, (err, inserted) => {
-                            if(err) reject(err);
+                            if (err) reject(err);
 
                             db.close();
                             const insertedUser = inserted.ops[0];
                             resolve({
-                                id: insertedUser._id, 
-                                name: insertedUser.name}
-                            );
+                                id: insertedUser._id,
+                                name: insertedUser.name
+                            });
                         });
+                    }).catch(e => {
+                        reject(e);
                     });
                 });
             });
