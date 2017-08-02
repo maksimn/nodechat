@@ -2,7 +2,7 @@ const Promise = require('promise-polyfill');
 const expect = require('expect');
 const request = require('supertest');
 
-import mockRepository from '../mockRepository';
+import mockRepository from '../db/mockRepository';
 import app from '../app';
 const repository = mockRepository;
 
@@ -19,8 +19,9 @@ const populateUsers = done => {
 describe('Authorization tests', () => {
     beforeEach(populateUsers);
     afterEach(done => {
-        mockRepository.getUsers().length = 0;
-        done();
+        mockRepository.clearRepository().then(() => {
+            done();
+        });
     });
 
     describe('POST /users', () => {
@@ -41,15 +42,15 @@ describe('Authorization tests', () => {
                         return done(err);
                     }
 
-                    const users = repository.getUsers();
-                    const user = users.find(u => u.name === name);
-                    if (user) {
-                        expect(user).toExist();
-                        expect(user.password).toNotBe(password);
-                        done();
-                    } else {
-                        done(new Error('User not added to repo'));
-                    }
+                    repository.getUserByName(name).then(user => {
+                        if (user) {
+                            expect(user).toExist();
+                            expect(user.password).toNotBe(password);
+                            done();
+                        } else {
+                            done(new Error('User not added to repo'));
+                        }
+                    });
                 });
         });
 
@@ -92,15 +93,14 @@ describe('Authorization tests', () => {
                         return done(err);
                     }
 
-                    const users = repository.getUsers();
-                    const _user = users.find(u => u.name === user.name);
-
-                    if (_user) {
-                        expect(_user.token).toBe(res.headers['x-auth']);
-                        done();
-                    } else {
-                        done(new Error('User and its token not found in repository'));
-                    }
+                    repository.getUserByName(user.name).then(_user => {
+                        if (_user) {
+                            expect(_user.token).toBe(res.headers['x-auth']);
+                            done();
+                        } else {
+                            done(new Error('User and its token not found in repository'));
+                        }
+                    });
                 });
         });
 
@@ -136,15 +136,14 @@ describe('Authorization tests', () => {
                                 return done(err);
                             }
 
-                            const users = repository.getUsers();
-                            const user = users.find(u => u.name === user2.name);
-
-                            if (user) {
-                                expect(user.token).toBeFalsy();
-                                done();
-                            } else {
-                                done(new Error('This user does not exist'));
-                            }
+                            repository.getUserByName(user2.name).then(user => {
+                                if (user) {
+                                    expect(user.token).toBeFalsy();
+                                    done();
+                                } else {
+                                    done(new Error('This user does not exist'));
+                                }
+                            });
                         });
                 });
         });

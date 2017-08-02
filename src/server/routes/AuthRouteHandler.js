@@ -1,4 +1,4 @@
-import mockRepository from '../mockRepository';
+import mockRepository from '../db/mockRepository';
 
 const repository = mockRepository;
 

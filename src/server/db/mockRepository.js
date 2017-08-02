@@ -121,8 +121,15 @@ mockRepository.addChatMessage = message => {
     return Promise.resolve(newMessage);
 };
 
-mockRepository.getUsers = () => {
-    return users;
+mockRepository.getUserByName = name => {
+    const user = users.find(u => u.name === name);
+    return Promise.resolve(user);
+};
+
+mockRepository.clearRepository = () => {
+    users.length = 0;
+    chatMessages.length = 0;
+    return Promise.resolve();
 };
 
 export default mockRepository;

@@ -1,5 +1,5 @@
 import socketIO from 'socket.io';
-import mockRepository from './mockRepository';
+import mockRepository from './db/mockRepository';
 
 const repository = mockRepository;
 
