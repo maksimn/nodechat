@@ -1,6 +1,8 @@
-import mockRepository from '../db/mockRepository';
+// import mockRepository from '../db/mockRepository';
+import MongoRepository from '../db/MongoRepository';
 
-const repository = mockRepository;
+//const repository = mockRepository;
+const repository = new MongoRepository();
 
 export default class AuthRouteHandler {
     registerUser() {

@@ -2,9 +2,11 @@ const Promise = require('promise-polyfill');
 const expect = require('expect');
 const request = require('supertest');
 
-import mockRepository from '../db/mockRepository';
 import app from '../app';
-const repository = mockRepository;
+// import mockRepository from '../db/mockRepository';
+// const repository = mockRepository;
+import MongoRepository from '../db/MongoRepository';
+const repository = new MongoRepository();
 
 const user1 = { name: 'andrew', password: '123abc' },
     user2 = { name: 'zilberman', password: '123' };
@@ -19,7 +21,7 @@ const populateUsers = done => {
 describe('Authorization tests', () => {
     beforeEach(populateUsers);
     afterEach(done => {
-        mockRepository.clearRepository().then(() => {
+        repository.clearRepository().then(() => {
             done();
         });
     });

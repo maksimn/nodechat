@@ -1,6 +1,7 @@
 import Promise from 'promise-polyfill';
-import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+
+import generateAuthToken from './generateAuthToken';
 
 const mockRepository = {};
 
@@ -21,12 +22,6 @@ const mockRepository = {};
 
 const users = [];
 const chatMessages = [];
-
-const generateAuthToken = user => {
-    const secret = process.env['JWT_SECRET'];
-    const token = jwt.sign({id: user.id}, secret).toString();
-    return token;
-};
 
 mockRepository.addUser = (name, password) => {
     return new Promise((resolve, reject) => {

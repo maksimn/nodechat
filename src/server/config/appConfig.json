@@ -1,10 +1,12 @@
 {
     "test": {
         "PORT": 8000,
-        "JWT_SECRET": "abc123"
+        "JWT_SECRET": "abc123",
+        "MONGODB_URI": "mongodb://localhost:27017/NodeChatTest"
     },
     "development": {
         "PORT": 8000,
-        "JWT_SECRET": "abc123"
+        "JWT_SECRET": "abc123",
+        "MONGODB_URI": "mongodb://localhost:27017/NodeChat"
     }
 }

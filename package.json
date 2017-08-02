@@ -26,6 +26,7 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "jsonwebtoken": "^7.4.1",
+    "mongodb": "^2.2.30",
     "promise-polyfill": "^6.0.2",
     "prop-types": "^15.5.10",
     "react": "^15.3.0",
