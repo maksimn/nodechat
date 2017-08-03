@@ -44,6 +44,7 @@ export default class MongoRepository {
                                 db.collection('users').update({name}, {'$set': {token}}, (err, updated) => {
                                     if (err) return reject(err);
 
+                                    db.close();
                                     resolve({
                                         user: {
                                             id: userDoc._id,
@@ -100,6 +101,56 @@ export default class MongoRepository {
 
                     resolve(userDoc);
                 });
+            });
+        });
+    }
+
+    findUserByToken(token) {
+        return new Promise((resolve, reject) => {
+            MongoClient.connect(cnnString, function(err, db) {
+                if (err) reject(err);
+                
+                db.collection('users').findOne({token}, (err, userDoc) => {
+                    if (err) reject(err);
+                    
+                    db.close();
+
+                    if (userDoc) {
+                        resolve({
+                            id: userDoc._id,
+                            name: userDoc.name
+                        });
+                    } else {
+                        reject();
+                    }
+                });
+            });
+        });
+    }
+
+    logoutUser(token) {
+        return new Promise((resolve, reject) => {
+            MongoClient.connect(cnnString, function(err, db) {
+                if (err) return reject(err);
+
+                const users = db.collection('users');
+
+                users.findOne({token}, (err, userDoc) => {
+                    if (err) return reject(err);
+                    
+                    if (userDoc) {
+                        const query = {_id: userDoc._id};
+                        users.update(query, {'$set': { token: null }}, (err, updated) => {
+                            if (err) return reject(err);
+
+                            db.close();
+                            resolve();
+                        });
+                    } else {
+                        db.close();
+                        reject();
+                    }
+                });            
             });
         });
     }
