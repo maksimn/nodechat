@@ -1,7 +1,11 @@
 import Promise from 'promise-polyfill';
 import { MongoClient } from 'mongodb';
 
-import {passwordHash} from './appSecurity';
+import {
+    passwordHash, 
+    generateAuthToken, 
+    comparePasswordWithItsHash
+} from './appSecurity';
 
 const cnnString = process.env['MONGODB_URI'];
 
@@ -20,6 +24,42 @@ export default class MongoRepository {
                     
                     callback();
                 });
+            });
+        });
+    }
+
+    loginUser(name, password) {
+        return new Promise((resolve, reject) => {
+            MongoClient.connect(cnnString, function(err, db) {
+                if (err) return reject(err);
+                
+                db.collection('users').findOne({name}, (err, userDoc) => {
+                    if (err) return reject(err);
+
+                    if (userDoc) {
+                        comparePasswordWithItsHash(password, userDoc.password).then(result => {
+                            if (result) {
+                                const token = generateAuthToken(userDoc);
+
+                                db.collection('users').update({name}, {'$set': {token}}, (err, updated) => {
+                                    if (err) return reject(err);
+
+                                    resolve({
+                                        user: {
+                                            id: userDoc._id,
+                                            name: userDoc.name
+                                        },
+                                        token
+                                    });
+                                });
+                            } else {
+                                reject();
+                            }
+                        }).catch(() => { reject(); });
+                    } else {
+                        reject();
+                    }
+                });                
             });
         });
     }
@@ -67,7 +107,7 @@ export default class MongoRepository {
     clearRepository() {
         return new Promise((resolve, reject) => {
             MongoClient.connect(cnnString, function(err, db) {
-                if(err) reject(err);
+                if(err) return reject(err);
 
                 db.collection('users').drop(err => {
                     if(err) return reject(err);
