@@ -13,10 +13,10 @@ export default class MongoRepository {
     init(callback) {
         return new Promise((resolve, reject) => {
             MongoClient.connect(cnnString, function(err, db) {
-                if (err) reject(err);
+                if (err) return reject(err);
 
                 db.collection('users').createIndex({name: 1}, {unique: true}, (err, result) => {
-                    if (err) reject(err);
+                    if (err) return reject(err);
 
                     console.log('An index on users.name has been created. The index name: ', result);
                     
@@ -32,8 +32,10 @@ export default class MongoRepository {
         return new Promise((resolve, reject) => {
             MongoClient.connect(cnnString, function(err, db) {
                 if (err) return reject(err);
+
+                const users = db.collection('users');
                 
-                db.collection('users').findOne({name}, (err, userDoc) => {
+                users.findOne({name}, (err, userDoc) => {
                     if (err) return reject(err);
 
                     if (userDoc) {
@@ -41,7 +43,7 @@ export default class MongoRepository {
                             if (result) {
                                 const token = generateAuthToken(userDoc);
 
-                                db.collection('users').update({name}, {'$set': {token}}, (err, updated) => {
+                                users.update({name}, {'$set': {token}}, (err, updated) => {
                                     if (err) return reject(err);
 
                                     db.close();
@@ -54,13 +56,18 @@ export default class MongoRepository {
                                     });
                                 });
                             } else {
+                                db.close();
                                 reject();
                             }
-                        }).catch(() => { reject(); });
+                        }).catch(() => { 
+                            db.close();    
+                            reject(); 
+                        });
                     } else {
+                        db.close();
                         reject();
                     }
-                });                
+                });
             });
         });
     }
@@ -83,6 +90,7 @@ export default class MongoRepository {
                         });
                     });
                 }).catch(e => {
+                    db.close();
                     reject(e);
                 });
             });
