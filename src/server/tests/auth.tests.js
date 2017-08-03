@@ -61,7 +61,7 @@ describe('Authorization tests', () => {
                 .post('/users')
                 .send({})
                 .expect(400)
-                .end(done);
+                .end(() => { done(); });
         });
 
         it('should not create user if name in use', done => {
@@ -69,10 +69,10 @@ describe('Authorization tests', () => {
                 .post('/users')
                 .send({
                     name: user2.name,
-                    password: '123'
+                    password: '1234'
                 })
                 .expect(400)
-                .end(done);
+                .end(() => { done(); });
         });
     });
 
@@ -117,7 +117,7 @@ describe('Authorization tests', () => {
                 .expect((res) => {
                     expect(res.headers['x-auth']).toNotExist();
                 })
-                .end(done);
+                .end(() => { done(); });
         });
     });
 
@@ -183,7 +183,7 @@ describe('Authorization tests', () => {
                         .get('/users/auth')
                         .set('x-auth', token + 'a')
                         .expect(404)
-                        .end(done);
+                        .end(() => { done(); });
                 });
         });
     });

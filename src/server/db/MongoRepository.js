@@ -14,7 +14,7 @@ export default class MongoRepository {
                 db.collection('users').createIndex({name: 1}, {unique: true}, (err, result) => {
                     if (err) reject(err);
 
-                    // console.log('An index on users.name has been created. The index name: ', result);
+                    console.log('An index on users.name has been created. The index name: ', result);
                     
                     db.close();
                     
@@ -33,8 +33,6 @@ export default class MongoRepository {
                     const userDoc = { name, password: hash, token: null };
                     db.collection('users').insert(userDoc, (err, inserted) => {
                         if (err) return reject(err);
-
-                        console.log('INS ', inserted);
 
                         db.close();
                         const insertedUser = inserted.ops[0];
@@ -72,7 +70,7 @@ export default class MongoRepository {
                 if(err) reject(err);
 
                 db.collection('users').drop(err => {
-                    if(err) reject(err);
+                    if(err) return reject(err);
                     
                     db.close();
                     resolve();
