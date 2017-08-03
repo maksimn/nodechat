@@ -14,7 +14,7 @@ export default class MongoRepository {
                 db.collection('users').createIndex({name: 1}, {unique: true}, (err, result) => {
                     if (err) reject(err);
 
-                    console.log('An index on users.name has been created. The index name: ', result);
+                    // console.log('An index on users.name has been created. The index name: ', result);
                     
                     db.close();
                     
