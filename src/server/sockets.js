@@ -1,7 +1,6 @@
 import socketIO from 'socket.io';
-import mockRepository from './db/mockRepository';
-
-const repository = mockRepository;
+import MongoRepository from './db/MongoRepository';
+const repository = new MongoRepository();
 
 const NEW_CHAT_MESSAGE = 'NEW_CHAT_MESSAGE';
 

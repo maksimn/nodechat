@@ -100,10 +100,10 @@ export default class MongoRepository {
     getUserByName(name) {
         return new Promise((resolve, reject) => {
             MongoClient.connect(cnnString, function(err, db) {
-                if (err) reject(err);
+                if (err) return reject(err);
                 
                 db.collection('users').findOne({name}, (err, userDoc) => {
-                    if (err) reject(err);
+                    if (err) return reject(err);
                     
                     db.close();
 
@@ -116,10 +116,10 @@ export default class MongoRepository {
     findUserByToken(token) {
         return new Promise((resolve, reject) => {
             MongoClient.connect(cnnString, function(err, db) {
-                if (err) reject(err);
+                if (err) return reject(err);
                 
                 db.collection('users').findOne({token}, (err, userDoc) => {
-                    if (err) reject(err);
+                    if (err) return reject(err);
                     
                     db.close();
 
@@ -159,6 +159,38 @@ export default class MongoRepository {
                         reject();
                     }
                 });            
+            });
+        });
+    }
+
+    chatMessages() {
+        return new Promise((resolve, reject) => {
+            MongoClient.connect(cnnString, function(err, db) {
+                if (err) return reject(err);
+                
+                db.collection('chatMessages').find().toArray((err, docs) => {
+                    if (err) return reject(err);
+
+                    db.close();
+
+                    resolve(docs);
+                });
+            });
+        });
+    }
+
+    addChatMessage(message) {
+        return new Promise((resolve, reject) => {
+            MongoClient.connect(cnnString, function(err, db) {
+                if (err) reject(err);
+                
+                db.collection('chatMessages').insert(message, (err, inserted) => {
+                    if (err) reject(err);
+                    
+                    db.close();
+
+                    resolve(inserted.ops[0]);
+                });
             });
         });
     }
