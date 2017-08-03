@@ -68,7 +68,7 @@ describe('Authorization tests', () => {
             request(app)
                 .post('/users')
                 .send({
-                    name: 'andrew',
+                    name: user2.name,
                     password: '123'
                 })
                 .expect(400)

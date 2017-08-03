@@ -6,35 +6,45 @@ import {passwordHash} from './appSecurity';
 const cnnString = process.env['MONGODB_URI'];
 
 export default class MongoRepository {
-    addUser(name, password) {
+    init(callback) {
         return new Promise((resolve, reject) => {
             MongoClient.connect(cnnString, function(err, db) {
                 if (err) reject(err);
 
-                db.collection('users').findOne({name}, (err, userDoc) => {
+                db.collection('users').createIndex({name: 1}, {unique: true}, (err, result) => {
                     if (err) reject(err);
 
-                    if (userDoc) {
-                        const error = new Error('A user with given name already exists.');
-                        error.code = 409;
-                        reject(error);
-                    }
+                    console.log('An index on users.name has been created. The index name: ', result);
+                    
+                    db.close();
+                    
+                    callback();
+                });
+            });
+        });
+    }
 
-                    passwordHash(password).then(hash => {
-                        const userDoc = { name, password: hash, token: null };
-                        db.collection('users').insert(userDoc, (err, inserted) => {
-                            if (err) reject(err);
+    addUser(name, password) {
+        return new Promise((resolve, reject) => {
+            MongoClient.connect(cnnString, function(err, db) {
+                if (err) return reject(err);
 
-                            db.close();
-                            const insertedUser = inserted.ops[0];
-                            resolve({
-                                id: insertedUser._id,
-                                name: insertedUser.name
-                            });
+                passwordHash(password).then(hash => {
+                    const userDoc = { name, password: hash, token: null };
+                    db.collection('users').insert(userDoc, (err, inserted) => {
+                        if (err) return reject(err);
+
+                        console.log('INS ', inserted);
+
+                        db.close();
+                        const insertedUser = inserted.ops[0];
+                        resolve({
+                            id: insertedUser._id,
+                            name: insertedUser.name
                         });
-                    }).catch(e => {
-                        reject(e);
                     });
+                }).catch(e => {
+                    reject(e);
                 });
             });
         });
