@@ -10,7 +10,7 @@ import {
 const cnnString = process.env['MONGODB_URI'];
 
 export default class MongoRepository {
-    init(callback) {
+    init() {
         return new Promise((resolve, reject) => {
             MongoClient.connect(cnnString, function(err, db) {
                 if (err) return reject(err);
@@ -22,7 +22,7 @@ export default class MongoRepository {
                     
                     db.close();
                     
-                    callback();
+                    resolve();
                 });
             });
         });

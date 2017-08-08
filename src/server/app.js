@@ -18,10 +18,12 @@ app.use(bodyParser.json());
 app.use(appRouter);
 sockets(server);
 
-repository.init(() => {
+repository.init().then(() => {
     server.listen(port, () => {
         console.log(`Server is listening on port ${port}`);
     });
+}).catch(e => {
+    console.log('Unable to initialize chat data repository.\n', e.message);
 });
 
 export default app;
